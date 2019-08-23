@@ -1,0 +1,46 @@
+{
+  "name": "md-notes",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test": "vue-cli-service test:unit --watchAll",
+    "storybook": "start-storybook -p 9001 -c .storybook"
+  },
+  "dependencies": {
+    "bulma": "^0.7.5",
+    "core-js": "^2.6.5",
+    "marked": "^0.7.0",
+    "vue": "^2.6.10",
+    "vue-async-computed": "^3.7.0",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-knobs": "^5.1.11",
+    "@storybook/vue": "^5.1.11",
+    "@types/jest": "^24.0.17",
+    "@vue/cli-plugin-babel": "^3.10.0",
+    "@vue/cli-plugin-eslint": "^3.10.0",
+    "@vue/cli-plugin-unit-jest": "^3.10.0",
+    "@vue/cli-service": "^3.10.0",
+    "@vue/eslint-config-prettier": "^5.0.0",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "babel-preset-vue": "^2.0.2",
+    "copy-webpack-plugin": "^5.0.4",
+    "eslint": "^5.16.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "node-sass": "^4.9.0",
+    "prettier": "^1.18.2",
+    "pug-plain-loader": "^1.0.0",
+    "sass-loader": "^7.1.0",
+    "ts-jest": "^23.10.5",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
