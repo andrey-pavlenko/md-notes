@@ -9,7 +9,6 @@ const findOrFetchNote = async function(
   if (exists) {
     return Promise.resolve(exists);
   } else {
-    console.info(path);
     const fetched = await fetchNote(path);
     notesRef.push(fetched);
     return fetched;

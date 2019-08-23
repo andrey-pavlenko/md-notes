@@ -1,21 +1,41 @@
-import { Note, Meta } from './types';
+import axios from 'axios';
+import { Repository, Note, Meta } from './types';
 
-const contentsUrl = '/notes/contents.json';
+const repositoryUrl = '/notes/contents1.json';
+let base = '';
 
-const fetchContents = async function(): Promise<string[]> {
-  const response = await fetch(contentsUrl);
-  const json = await response.json();
-  return json;
+const initRepository = async function (): Promise<string[]> {
+  return new Promise((resolve, reject) => {
+    axios.get(repositoryUrl).then(response => {
+      const data: Repository = response.data;
+      base = response.data.base || base;
+      console.info(response.data, base);
+    })
+  });
+  // const data = await axios.get(contentsUrl) as Content;
+  // base = data.base;
+  // console.info(data);
+  // console.info(base);
+  // // const json = await response.json();
+  // return data.files;
 };
 
 const fetchNote = async function(url: string): Promise<Note> {
-  const response = await fetch(url);
-  const text = await response.text();
+  const response = await axios.get(url);
+  console.info(response);
+  // const text = await response.text();
   return {
     path: url,
-    content: text,
-    meta: getMeta(text)
+    content: 'text',
+    meta: getMeta('')
   };
+  // const response = await fetch(url);
+  // const text = await response.text();
+  // return {
+  //   path: url,
+  //   content: text,
+  //   meta: getMeta(text)
+  // };
 };
 
 const getTitle = function(text: string): string | undefined {
@@ -52,4 +72,4 @@ const getMeta = function(text: string): Meta {
   return meta;
 };
 
-export { fetchContents, fetchNote };
+export { initRepository as getRepository, fetchNote };

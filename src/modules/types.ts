@@ -1,3 +1,8 @@
+interface Repository { 
+  base: string,
+  files: string[]
+};
+
 interface Meta {
   title?: string,
   tags?: string[],
@@ -18,4 +23,4 @@ interface TocItem {
   children?: TocItem[]
 };
 
-export { Note, Meta, TocItem };
+export { Repository, Note, Meta, TocItem };

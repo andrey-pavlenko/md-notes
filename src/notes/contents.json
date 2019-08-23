@@ -1,5 +1,7 @@
-[
-  "/notes/test1.md",
-  "/notes/test2.md",
-  "/notes/test3.md"
-]
+{ "base": "/notes",
+  "files": [
+    "/test1.md",
+    "/test2.md",
+    "/test3.md"
+  ]
+}
