@@ -1,6 +1,6 @@
-interface Repository { 
-  base: string,
-  files: string[]
+interface Loaded {
+  success: any[],
+  errors?: string[]
 };
 
 interface Meta {
@@ -23,4 +23,4 @@ interface TocItem {
   children?: TocItem[]
 };
 
-export { Repository, Note, Meta, TocItem };
+export { Note, Meta, TocItem, Loaded };

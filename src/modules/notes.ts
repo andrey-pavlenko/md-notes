@@ -1,24 +1,24 @@
 import axios from 'axios';
-import { Repository, Note, Meta } from './types';
+import { Note, Meta } from './types';
 
 const repositoryUrl = '/notes/contents1.json';
 let base = '';
 
-const initRepository = async function (): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    axios.get(repositoryUrl).then(response => {
-      const data: Repository = response.data;
-      base = response.data.base || base;
-      console.info(response.data, base);
-    })
-  });
-  // const data = await axios.get(contentsUrl) as Content;
-  // base = data.base;
-  // console.info(data);
-  // console.info(base);
-  // // const json = await response.json();
-  // return data.files;
-};
+// const initRepository = async function (): Promise<string[]> {
+//   return new Promise((resolve, reject) => {
+//     axios.get(repositoryUrl).then(response => {
+//       const data: Repository = response.data;
+//       base = response.data.base || base;
+//       console.info(response.data, base);
+//     })
+//   });
+//   // const data = await axios.get(contentsUrl) as Content;
+//   // base = data.base;
+//   // console.info(data);
+//   // console.info(base);
+//   // // const json = await response.json();
+//   // return data.files;
+// };
 
 const fetchNote = async function(url: string): Promise<Note> {
   const response = await axios.get(url);
@@ -72,4 +72,4 @@ const getMeta = function(text: string): Meta {
   return meta;
 };
 
-export { initRepository as getRepository, fetchNote };
+export { fetchNote };

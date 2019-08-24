@@ -1,4 +1,6 @@
 const axios = jest.genMockFromModule('axios');
+const fs = require('fs');
+const path = require('path');
 
 let responses = {};
 
@@ -14,11 +16,27 @@ const get = function(url) {
   if (responses.hasOwnProperty(url)) {
     return Promise.resolve(responses[url]);
   } else {
-    return Promise.reject({
-      response: {
-        status: 404,
-        statusText: 'Not found'
-      }
+    return new Promise((resolve, reject) => {
+      fs.readFile(url, (error, data) => {
+        if (error) {
+          if (error.code !== 'ENOENT') {
+            console.info('Unknown error', error);
+          }
+          reject({
+            response: {
+              status: 404,
+              statusText: 'Not found'
+            }
+          });
+        } else {
+          data = data.toString();
+          if (path.extname(url) === '.json') {
+            resolve(JSON.parse(data));
+          } else {
+            resolve(data);
+          }
+        }
+      });
     });
   }
 };
