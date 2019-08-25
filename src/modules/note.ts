@@ -1,4 +1,4 @@
-import { load as loadRepository, Results} from './repository';
+import { load as loadRepository, Note, ErrorCallback } from './repository';
 
 interface Meta {
   title?: string,
@@ -7,14 +7,13 @@ interface Meta {
   children?: string[]
 };
 
-function load(target: string | string[]): Promise<Results> {
+function load(target: string | string[], errorCallback?: ErrorCallback): Promise<Note[]> {
   return new Promise(resolve => {
-    loadRepository(target).then(r => {
-      r.notes = r.notes.map(s => {
-        s.meta = getMeta(s.content);
-        return s;
-      });
-      resolve(r);
+    loadRepository(target, errorCallback).then(notes => {
+      resolve(notes.map(n => {
+        n.meta = getMeta(n.content);
+        return n;
+      }));
     })
   });
   };

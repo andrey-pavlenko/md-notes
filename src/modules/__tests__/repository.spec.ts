@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { init, resolve, load, Results } from '../repository';
+import { init, resolve, load, Note } from '../repository';
 import { notFoundReason  } from './spec-utils';
 
 jest.mock('axios');
@@ -45,11 +45,11 @@ describe('Repository', () => {
       base: path.resolve(__dirname, './cases/notes-00')
     };
     require('axios').__set('notes-00', { data });
+    const errorCallback = jest.fn();
     await init('notes-00');
-    const results: Results = await load(['test1.md', 'test2.md', 'test3.md']);
-    expect(results).not.toHaveProperty('errors');
-    expect(Array.isArray(results.notes)).toBeTruthy();
-    expect(results.notes.length).toBe(3);
+    const notes: Note[] = await load(['test1.md', 'test2.md', 'test3.md'], errorCallback);
+    expect(errorCallback).not.toHaveBeenCalled();
+    expect(notes.length).toBe(3);
     require('axios').__unset('notes-00');
   });
 
@@ -58,14 +58,18 @@ describe('Repository', () => {
       base: path.resolve(__dirname, './cases/notes-00')
     };
     require('axios').__set('notes-00', { data });
+    const errorCallback = jest.fn();
     await init('notes-00');
-    const results: Results = await load(['test1.md', 'test2.md', 'test3.md', 'test99.md']);
-    expect(results.errors).toEqual([{
+    const notes: Note[] = await load(
+      ['test1.md', 'test2.md', 'test3.md', 'test99.md'],
+      errorCallback
+    );
+    expect(notes).toHaveLength(3);
+    expect(errorCallback).toHaveBeenCalledTimes(1);
+    expect(errorCallback.mock.calls[0][0]).toEqual([{
       url: 'test99.md',
       reason: notFoundReason
     }]);
-    expect(Array.isArray(results.notes)).toBeTruthy();
-    expect(results.notes.length).toBe(3);
     require('axios').__unset('notes-00');
   });
 
@@ -76,13 +80,14 @@ describe('Repository', () => {
     require('axios').__set('notes-99', { data });
     await init('notes-99');
     const files = ['test1.md', 'test2.md', 'test3.md'];
-    const results: Results = await load(files);
-    expect(results.errors).toEqual(files.map(f => ({
+    const errorCallback = jest.fn();
+    const notes: Note[] = await load(files, errorCallback);
+    expect(notes).toHaveLength(0);
+    expect(errorCallback).toHaveBeenCalledTimes(1);
+    expect(errorCallback.mock.calls[0][0]).toEqual(files.map(f => ({
       url: f,
       reason: notFoundReason
     })));
-    expect(Array.isArray(results.notes)).toBeTruthy();
-    expect(results.notes.length).toBe(0);
     require('axios').__unset('notes-99');
   });
 
@@ -92,10 +97,10 @@ describe('Repository', () => {
     };
     require('axios').__set('notes-00', { data });
     await init('notes-00');
-    const results: Results = await load('test1.md');
-    expect(results).not.toHaveProperty('errors');
-    expect(Array.isArray(results.notes)).toBeTruthy();
-    expect(results.notes.length).toBe(1);
+    const errorCallback = jest.fn();
+    const notes: Note[] = await load('test1.md', errorCallback);
+    expect(notes).toHaveLength(1);
+    expect(errorCallback).not.toHaveBeenCalled();
     require('axios').__unset('notes-00');
   });
 
@@ -105,13 +110,13 @@ describe('Repository', () => {
     };
     require('axios').__set('notes-00', { data });
     await init('notes-00');
-    const results: Results = await load('test99.md');
-    expect(results.errors).toEqual([{
+    const errorCallback = jest.fn();
+    const notes: Note[] = await load('test99.md', errorCallback);
+    expect(errorCallback).toHaveBeenCalledTimes(1);
+    expect(errorCallback.mock.calls[0][0]).toEqual([{
       url: 'test99.md',
       reason: notFoundReason
     }]);
-    expect(Array.isArray(results.notes)).toBeTruthy();
-    expect(results.notes.length).toBe(0);
     require('axios').__unset('notes-00');
   });
 

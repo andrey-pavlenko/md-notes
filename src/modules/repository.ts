@@ -11,12 +11,9 @@ interface Note {
 interface Error {
   url: string,
   reason: any
-}
+};
 
-interface Results {
-  notes: Note[],
-  errors?: Error[]
-}
+type ErrorCallback = (errors: Error[]) => void;
 
 let _base: string;
 
@@ -48,7 +45,7 @@ function resolve(path: string): string {
   }
 }
 
-function load(target: string | string[]): Promise<Results> {
+function load(target: string | string[], errorCallback?: ErrorCallback): Promise<Note[]> {
   const resolvePath = resolve;
 
   class ErrorLoad {
@@ -65,32 +62,29 @@ function load(target: string | string[]): Promise<Results> {
       targets
         .map(t => axios.get(resolvePath(t)))
         .map(p => p.catch(e => new ErrorLoad(e.response)))
-    ).then(rs => {
-      const results: Results = {
-        notes: []
-      };
-      rs.forEach((r, i) => {
+    ).then(results => {
+      const notes: Note[] = [];
+      const errors: Error[] = [];
+      results.forEach((r, i) => {
         if (r instanceof ErrorLoad) {
-          const error: Error = {
+          errors.push({
             url: targets[i],
             reason: r.reason
-          };
-          if (!results.errors) {
-            results.errors = [error];
-          } else {
-            results.errors.push(error);
-          }
+          });
         } else {
           const note: Note = {
             url: targets[i],
             content: r
           };
-          results.notes.push(note);
+          notes.push(note);
         }
       });
-      resolve(results);
+      if (errorCallback && errors.length) {
+        errorCallback(errors);
+      }
+      resolve(notes);
     });
   });
 }
 
-export { init, resolve, load, Results };
+export { init, resolve, load, Note, Error, ErrorCallback };
