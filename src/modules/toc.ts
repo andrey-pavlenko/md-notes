@@ -1,6 +1,12 @@
 import { TocItem, Note } from './types';
 import { fetchNote } from './notes';
 
+interface TocItem {
+  title: string,
+  path: string,
+  children?: TocItem[]
+};
+
 const findOrFetchNote = async function(
   path: string,
   notesRef: Note[]

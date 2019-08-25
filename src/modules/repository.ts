@@ -1,8 +1,11 @@
 import axios from 'axios';
+import { Meta } from './note';
 
-interface Success {
+interface Note {
   url: string,
-  content: any
+  content: any,
+  meta?: Meta,
+  html?: string
 };
 
 interface Error {
@@ -11,8 +14,8 @@ interface Error {
 }
 
 interface Results {
-  success: Success[],
-  error?: Error[]
+  notes: Note[],
+  errors?: Error[]
 }
 
 let _base: string;
@@ -64,7 +67,7 @@ function load(target: string | string[]): Promise<Results> {
         .map(p => p.catch(e => new ErrorLoad(e.response)))
     ).then(rs => {
       const results: Results = {
-        success: []
+        notes: []
       };
       rs.forEach((r, i) => {
         if (r instanceof ErrorLoad) {
@@ -72,17 +75,17 @@ function load(target: string | string[]): Promise<Results> {
             url: targets[i],
             reason: r.reason
           };
-          if (!results.error) {
-            results.error = [error];
+          if (!results.errors) {
+            results.errors = [error];
           } else {
-            results.error.push(error);
+            results.errors.push(error);
           }
         } else {
-          const success: Success = {
+          const note: Note = {
             url: targets[i],
             content: r
           };
-          results.success.push(success);
+          results.notes.push(note);
         }
       });
       resolve(results);
