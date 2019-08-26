@@ -18,7 +18,7 @@ function load(
 }
 
 function getTitle(text: string): string | undefined {
-  const titleRegex = /^#+\s*([\s\S]*)\n\n/m;
+  const titleRegex = /^#+\s*([\s\S]*?)\n\n/m;
   const match = text.match(titleRegex);
   if (match) return match[1].split('\n').join(' ');
 }

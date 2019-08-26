@@ -1,17 +1,20 @@
 <template lang="pug">
 div(v-if="processing")
-  p Загрузка
+  Spinner
 div(v-else)
   p Статья
   p {{ url }}
-  div(v-html="html")
+  div.markdown(v-html="html")
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import Spinner from '@/components/spinner';
 
 export default {
-  name: 'note',
+  components: {
+    Spinner
+  },
   props: {
     url: String
   },

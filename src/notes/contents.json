@@ -1,5 +1,6 @@
 { "base": "/notes",
   "files": [
+    "npm.md",
     "test1.md",
     "test2.md",
     "test3.md"
