@@ -1,7 +1,7 @@
 { "base": "/notes",
   "files": [
-    "/test1.md",
-    "/test2.md",
-    "/test3.md"
+    "test1.md",
+    "test2.md",
+    "test3.md"
   ]
 }

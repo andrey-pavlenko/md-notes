@@ -8,7 +8,7 @@ import store from './store';
 
 export default {
   created() {
-    store.dispatch('fetchContents');
+    store.dispatch('init');
   }
 };
 </script>

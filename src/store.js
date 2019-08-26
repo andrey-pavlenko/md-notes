@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { fetchContents, fetchNote } from './modules/notes';
-import { getToc } from './modules/toc';
+import { init as initRepository } from './modules/repository';
+import { load as loadNote } from './modules/note';
+import { load as loadContents } from './modules/contents';
 import Marked from 'marked';
 
 Vue.use(Vuex);
@@ -12,10 +13,10 @@ const store = new Vuex.Store({
     processing: false,
     error: false,
     notes: [],
-    toc: []
+    contents: []
   },
   getters: {
-    noteByPath: state => path => state.notes.find(n => n.path === path)
+    noteByUrl: state => url => state.notes.find(n => n.url === url)
   },
   mutations: {
     updateNotes(state, notes) {
@@ -23,7 +24,7 @@ const store = new Vuex.Store({
     },
     updateNote(state, note) {
       state.notes = [].concat(
-        state.notes.filter(n => n.path !== note.path),
+        state.notes.filter(n => n.url !== note.url),
         note
       );
     },
@@ -33,30 +34,30 @@ const store = new Vuex.Store({
     updateError(state, error) {
       state.error = error;
     },
-    updateToc(state, toc) {
-      state.toc = toc;
+    updateContents(state, contents) {
+      state.contents = contents;
     }
   },
   actions: {
-    async fetchContents({ commit }) {
+    async init({ commit }) {
       commit('updateProcessing', true);
       try {
-        const contents = await fetchContents();
-        const notes = await Promise.all(contents.map(url => fetchNote(url)));
-        const toc = await getToc(notes);
+        const files = await initRepository('notes/contents.json');
+        const errorCallback = errors => console.info('Show error', errors);
+        const notes = await loadNote(files, errorCallback);
+        const contents = await loadContents(notes, errorCallback);
         commit('updateNotes', notes);
-        commit('updateToc', toc);
+        commit('updateContents', contents);
       } catch (e) {
         console.error(e);
       }
       commit('updateProcessing', false);
     },
-    async getNoteHtml({ getters, commit }, path) {
-      const note = getters.noteByPath(path);
+    async getHtml({ getters, commit }, url) {
+      const note = getters.noteByUrl(url);
       if (!note) {
-        const error = `Файл ${path} не найден`;
+        const error = `Файл ${url} не найден`;
         console.error(error);
-        commit('updateError', error);
         throw error;
       }
       if (!note.html) {
@@ -69,8 +70,5 @@ const store = new Vuex.Store({
     }
   }
 });
-
-// store.dispatch('fetchContents');
-// window.store = store;
 
 export default store;

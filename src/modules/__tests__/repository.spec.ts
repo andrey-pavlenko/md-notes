@@ -1,5 +1,6 @@
 import * as path from 'path';
-import { init, resolve, load, Note } from '../repository';
+import { init, resolve, load } from '../repository';
+import { Note } from '../types';
 import { notFoundReason  } from './spec-utils';
 
 jest.mock('axios');

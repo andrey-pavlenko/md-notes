@@ -1,11 +1,5 @@
-import { Note, ErrorCallback } from './repository';
+import { Note, ErrorCallback, ContentsItem } from './types';
 import { load as loadNote } from './note';
-
-interface ContentsItem {
-  title: string,
-  url: string,
-  children?: ContentsItem[]
-};
 
 function findOrLoadhNote(
   url: string,
@@ -20,8 +14,8 @@ function findOrLoadhNote(
       loadNote(url, errorCallback).then(notes => {
         notes.forEach(n => notesRef.push(n));
         resolve(notes[0]);
-      })
-    })
+      });
+    });
   }
 }
 
@@ -36,15 +30,18 @@ function getItem(
   };
   if (note.meta.children && note.meta.children.length) {
     return new Promise(resolve => {
-      Promise.all(note.meta.children.map(c => findOrLoadhNote(c, notesRef, errorCallback)))
-        .then(children => {
-          Promise.all(children
+      Promise.all(
+        note.meta.children.map(c => findOrLoadhNote(c, notesRef, errorCallback))
+      ).then(children => {
+        Promise.all(
+          children
             .filter(n => !!n)
-            .map(n => getItem(n, notesRef, errorCallback))).then(i => {
-            item.children = i;
-            resolve(item);
-          })
+            .map(n => getItem(n, notesRef, errorCallback))
+        ).then(i => {
+          item.children = i;
+          resolve(item);
         });
+      });
     });
   }
   return Promise.resolve(item);
@@ -57,4 +54,4 @@ function load(
   return Promise.all(notesRef.map(n => getItem(n, notesRef, errorCallback)));
 }
 
-export { load, ContentsItem };
+export { load };

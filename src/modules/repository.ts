@@ -1,25 +1,12 @@
 import axios from 'axios';
-import { Meta } from './note';
-
-interface Note {
-  url: string,
-  content: any,
-  meta?: Meta,
-  html?: string
-};
-
-interface Error {
-  url: string,
-  reason: any
-};
-
-type ErrorCallback = (errors: Error[]) => void;
+import { Note, Error, ErrorCallback } from './types';
 
 let _base: string;
 
 function init(url): Promise<string[]> {
   return new Promise((resolve, reject) => {
-    axios.get(url)
+    axios
+      .get(url)
       .then(response => {
         _base = response.data.base || '';
         if (!_base.endsWith('/')) _base += '/';
@@ -27,9 +14,9 @@ function init(url): Promise<string[]> {
       })
       .catch(error => {
         reject(error.response);
-      })
+      });
   });
-};
+}
 
 /**
  * Bad behavior
@@ -37,24 +24,26 @@ function init(url): Promise<string[]> {
  */
 function resolve(path: string): string {
   if (_base) {
-    if (path.startsWith('/'))
-      return path;
-    return _base  + path.replace(/^\.*\//, '');
+    if (path.startsWith('/')) return path;
+    return _base + path.replace(/^\.*\//, '');
   } else {
     return path;
   }
 }
 
-function load(target: string | string[], errorCallback?: ErrorCallback): Promise<Note[]> {
+function load(
+  target: string | string[],
+  errorCallback?: ErrorCallback
+): Promise<Note[]> {
   const resolvePath = resolve;
 
   class ErrorLoad {
-    readonly reason: any;
+    reason: any;
 
     constructor(reason: any) {
       this.reason = reason;
     }
-   };
+  }
 
   return new Promise(resolve => {
     const targets: string[] = Array.prototype.concat(target);
@@ -74,7 +63,7 @@ function load(target: string | string[], errorCallback?: ErrorCallback): Promise
         } else {
           const note: Note = {
             url: targets[i],
-            content: r
+            content: r.data
           };
           notes.push(note);
         }
@@ -87,4 +76,4 @@ function load(target: string | string[], errorCallback?: ErrorCallback): Promise
   });
 }
 
-export { init, resolve, load, Note, Error, ErrorCallback };
+export { init, resolve, load };

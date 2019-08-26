@@ -2,7 +2,7 @@
 {
   "title": "Первая запись",
   "tags": [],
-  "children": ["/notes/test1-1.md", "/notes/test1-2.md"]
+  "children": ["test1-1.md", "test1-2.md"]
 }
 -->
 

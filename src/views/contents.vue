@@ -3,23 +3,22 @@ div
   p Содержание
   Spinner(v-if="processing")
   ul
-    TocItem(v-for="tocItem in toc", :key="tocItem.path", :item="tocItem")
+    ContentsItem(v-for="item in contents", :key="item.url", :item="item")
 </template>
 
 <script>
 // // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue';
 import { mapState } from 'vuex';
-import TocItem from '@/components/toc-item';
+import ContentsItem from '@/components/contents-item';
 import Spinner from '@/components/spinner';
 
 export default {
-  name: 'toc',
-  components: { TocItem, Spinner },
+  components: { ContentsItem, Spinner },
   computed: {
     ...mapState({
       processing: 'processing',
-      toc: 'toc'
+      contents: 'contents'
     })
   }
 };

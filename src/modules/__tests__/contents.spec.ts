@@ -18,7 +18,7 @@ describe('Contents', () => {
   });
 
 
-  it.skip('load: one level', async () => {
+  it('load: one level', async () => {
     const errorCallback = jest.fn();
     const notes = await loadNote('test1.md', errorCallback);
     const contents = await loadContents(notes, errorCallback);
@@ -26,7 +26,7 @@ describe('Contents', () => {
     expect(errorCallback).not.toHaveBeenCalled();
   });
 
-  it.skip('load: nested level', async () => {
+  it('load: nested level', async () => {
     const files = ['test1.md', 'test2.md'];
     const notes = await loadNote(files);
     expect(notes.map(n => n.url)).toEqual(files);

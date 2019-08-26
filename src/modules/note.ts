@@ -1,28 +1,27 @@
-import { load as loadRepository, Note, ErrorCallback } from './repository';
+import { load as loadRepository } from './repository';
+import { Meta, Note, ErrorCallback } from './types';
 
-interface Meta {
-  title?: string,
-  tags?: string[],
-  related?: string[],
-  children?: string[]
-};
-
-function load(target: string | string[], errorCallback?: ErrorCallback): Promise<Note[]> {
+function load(
+  target: string | string[],
+  errorCallback?: ErrorCallback
+): Promise<Note[]> {
   return new Promise(resolve => {
     loadRepository(target, errorCallback).then(notes => {
-      resolve(notes.map(n => {
-        n.meta = getMeta(n.content);
-        return n;
-      }));
-    })
+      resolve(
+        notes.map(n => {
+          n.meta = getMeta(n.content);
+          return n;
+        })
+      );
+    });
   });
-  };
+}
 
 function getTitle(text: string): string | undefined {
   const titleRegex = /^#+\s*([\s\S]*)\n\n/m;
   const match = text.match(titleRegex);
   if (match) return match[1].split('\n').join(' ');
-};
+}
 
 function getMetaFromComment(text: string): Meta {
   const metaRegex = /^<!-{2,3}\s*(\{[\s\S]*\})\s*-->$/;
@@ -39,9 +38,9 @@ function getMetaFromComment(text: string): Meta {
         }
       })
   );
-};
+}
 
-function getMeta (text: string): Meta {
+function getMeta(text: string): Meta {
   const meta: Meta = getMetaFromComment(text);
   if (!meta.title) {
     const title = getTitle(text);
@@ -50,6 +49,6 @@ function getMeta (text: string): Meta {
     }
   }
   return meta;
-};
+}
 
-export { load, Meta };
+export { load };

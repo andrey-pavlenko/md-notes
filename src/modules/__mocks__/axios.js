@@ -33,7 +33,7 @@ const get = function(url) {
           if (path.extname(url) === '.json') {
             resolve(JSON.parse(data));
           } else {
-            resolve(data);
+            resolve({ data });
           }
         }
       });

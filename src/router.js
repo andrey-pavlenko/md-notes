@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Toc from '@/views/toc';
+import Contents from '@/views/contents';
 // import Home from './views/Home.vue';
 
 Vue.use(Router);
@@ -10,10 +10,10 @@ export default new Router({
     {
       path: '/',
       name: 'contents',
-      component: Toc
+      component: Contents
     },
     {
-      path: '/note/:path',
+      path: '/note=:url',
       name: 'note',
       component: () =>
         import(/* webpackChunkName: "note" */ '@/views/note.vue'),
