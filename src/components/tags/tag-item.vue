@@ -1,5 +1,5 @@
 <template lang="pug">
-  .tags.has-addons
+  .md_tags_item.tags.has-addons
     span.tag.is-info {{label}}
     span.tag.is-dark {{enchanceCount}}
 </template>
@@ -27,9 +27,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.tags {
-  cursor: pointer;
-}
-</style>

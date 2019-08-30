@@ -1,3 +1,6 @@
+const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path');
+
 module.exports = async ({ config, mode }) => {
   config.module.rules = [...config.module.rules, {
     test: /\.scss$/,
@@ -152,6 +155,16 @@ module.exports = async ({ config, mode }) => {
         ],
       },
     ]
+    }, {
+        test: /\.(svg)(\?.*)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]'
+            }
+          }
+        ]
     }];
   
   return config;

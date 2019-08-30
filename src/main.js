@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import AsyncComputed from 'vue-async-computed';
 import './styles/index.scss';
+import './styles/icons/icons.svg';
 
 Vue.config.productionTip = false;
 

@@ -4,6 +4,7 @@ import { action } from '@storybook/addon-actions';
 
 import TagItem from '../components/tags/tag-item';
 import TagsContainer from '../components/tags/tags-container';
+import Tags from '../components/tags/tags';
 
 function random(min, max) {
   min = Math.ceil(min);
@@ -76,23 +77,19 @@ const tags = [
 
 storiesOf('Tags', module)
   .addDecorator(withKnobs)
-  .add('TagItem', () => ({
-    props: {
-      label: {
-        type: String,
-        default: text('Label', 'storybook')
-      },
-      count: {
-        type: Number,
-        default: number('Count', 12345, {
-          range: true,
-          min: 1,
-          max: 10000000
-        })
-      }
+  .add('Tags', () => ({
+    components: {
+      Tags
     },
-    components: { TagItem },
-    template: '<TagItem :label="label" :count="count" />'
+    data: function() {
+      return {
+        tags: tags
+      };
+    },
+    methods: {
+      onClick: action('Tags @click')
+    },
+    template: '<Tags :tags="tags" @click="onClick" />'
   }))
   .add('TagsContainer', () => ({
     props: {
@@ -116,4 +113,22 @@ storiesOf('Tags', module)
     },
     components: { TagsContainer },
     template: '<TagsContainer :tags="selectedTags" @click="onClick" />'
+  }))
+  .add('TagItem', () => ({
+    props: {
+      label: {
+        type: String,
+        default: text('Label', 'storybook')
+      },
+      count: {
+        type: Number,
+        default: number('Count', 12345, {
+          range: true,
+          min: 1,
+          max: 10000000
+        })
+      }
+    },
+    components: { TagItem },
+    template: '<TagItem :label="label" :count="count" />'
   }));
