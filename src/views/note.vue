@@ -2,24 +2,31 @@
 div(v-if="processing")
   Spinner
 div(v-else)
-  p Статья
-  p {{ url }}
+  TagsContainer(v-if="tags.length", :tags="tags")
   div.markdown(v-html="html")
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import Spinner from '@/components/spinner';
+import TagsContainer from '@/components/tags/tags-container';
 
 export default {
   components: {
-    Spinner
+    Spinner,
+    TagsContainer
   },
   props: {
     url: String
   },
   computed: {
-    ...mapState({ processing: 'processing' })
+    tags: function() {
+      const note = this.note(this.url);
+      const tags = this.noteTags(note);
+      return tags;
+    },
+    ...mapState({ processing: 'processing' }),
+    ...mapGetters({ note: 'noteByUrl', noteTags: 'noteTags' })
   },
   methods: {
     ...mapActions({ getHtml: 'getHtml' })
@@ -28,6 +35,9 @@ export default {
     async html() {
       return this.processing ? '' : await this.getHtml(this.url);
     }
+  },
+  created() {
+    window.c = this;
   }
 };
 </script>

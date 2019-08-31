@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import { init as initRepository } from './modules/repository';
 import { load as loadNote } from './modules/note';
 import { load as loadContents } from './modules/contents';
+import { load as loadTags } from './modules/tags';
 import Marked from 'marked';
 
 Vue.use(Vuex);
@@ -13,10 +14,18 @@ const store = new Vuex.Store({
     processing: false,
     error: false,
     notes: [],
-    contents: []
+    contents: [],
+    tags: []
   },
   getters: {
-    noteByUrl: state => url => state.notes.find(n => n.url === url)
+    noteByUrl: state => url => state.notes.find(n => n.url === url),
+    noteTags: state => note =>
+      state.tags.filter(t => {
+        if (note.meta.tags && note.meta.tags.length) {
+          return note.meta.tags.includes(t.label);
+        }
+        return false;
+      })
   },
   mutations: {
     updateNotes(state, notes) {
@@ -36,6 +45,9 @@ const store = new Vuex.Store({
     },
     updateContents(state, contents) {
       state.contents = contents;
+    },
+    updateTags(state, tags) {
+      state.tags = tags;
     }
   },
   actions: {
@@ -48,6 +60,7 @@ const store = new Vuex.Store({
         const contents = await loadContents(notes, errorCallback);
         commit('updateNotes', notes);
         commit('updateContents', contents);
+        commit('updateTags', loadTags(notes));
       } catch (e) {
         console.error(e);
       }
@@ -70,5 +83,7 @@ const store = new Vuex.Store({
     }
   }
 });
+
+window.store = store;
 
 export default store;

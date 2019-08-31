@@ -13,7 +13,7 @@ function load(notes: Note[]): TagItem[] {
           tags.push({
             label: t,
             count: 1
-          })
+          });
         }
       });
     }
