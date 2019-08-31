@@ -14,6 +14,17 @@ module.exports = {
             loader: 'babel-loader'
           },
           exclude: /node_modules/
+        },
+        {
+          test: /styles\/icons\/icons.svg$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: 'icons.svg'
+              }
+            }
+          ]
         }
       ]
     },

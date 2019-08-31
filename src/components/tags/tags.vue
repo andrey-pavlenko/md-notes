@@ -2,7 +2,7 @@
   .md_tags
     .field.md_tags_filter
       .control.has-icons-left.has-icons-right
-        input.input.is-small(type="text", v-model="filter")
+        input.input.is-small(type="text", v-model="filter", ref="filter-input")
         span.icon.is-left
           svg
             use(href="icons.svg#search")
@@ -36,6 +36,7 @@ export default {
   methods: {
     onBackspaceClick() {
       this.filter = '';
+      this.$refs['filter-input'].focus();
     }
   }
 };

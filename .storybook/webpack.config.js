@@ -156,12 +156,12 @@ module.exports = async ({ config, mode }) => {
       },
     ]
     }, {
-        test: /\.(svg)(\?.*)?$/,
+        test: /styles\/icons\/icons.svg$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '[name].[ext]'
+              name: 'icons.svg'
             }
           }
         ]
