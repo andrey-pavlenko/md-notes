@@ -25,4 +25,9 @@ interface ContentsItem {
   children?: ContentsItem[]
 };
 
-export { Meta, Note, Error, ErrorCallback, ContentsItem }
+interface TagItem {
+  label: string,
+  count: number
+};
+
+export { Meta, Note, Error, ErrorCallback, ContentsItem, TagItem }
