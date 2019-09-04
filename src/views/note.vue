@@ -3,32 +3,68 @@ div(v-if="processing")
   Spinner
 div(v-else)
   TagsContainer(v-if="tags.length", :tags="tags")
-  div.markdown(v-html="html")
+  div.markdown(v-html="html", ref="markdown")
+  ImgPreview(v-if="imgPreviewSrc", :src="imgPreviewSrc", @close="imgPreviewSrc=''")
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import Spinner from '@/components/spinner';
 import TagsContainer from '@/components/tags/tags-container';
+import ImgPreview from '@/components/img-preview';
 
 export default {
   components: {
     Spinner,
-    TagsContainer
+    TagsContainer,
+    ImgPreview
   },
   props: {
     url: String
   },
+  data() {
+    return {
+      imgPreviewSrc: ''
+    };
+  },
   computed: {
     tags: function() {
-      const note = this.note(this.url);
+      const note = this.noteByUrl(this.url);
       const tags = this.noteTags(note);
       return tags;
     },
     ...mapState({ processing: 'processing' }),
-    ...mapGetters({ note: 'noteByUrl', noteTags: 'noteTags' })
+    ...mapGetters({ noteByUrl: 'noteByUrl', noteTags: 'noteTags' })
   },
   methods: {
+    onWindowResize: debounce(function() {
+      this.updateImgPreviewAll();
+    }, 500),
+    onImgPreview(event) {
+      this.imgPreviewSrc = event.target.src;
+    },
+    updateImgPreview(img) {
+      if (img.naturalWidth > img.width || img.naturalHeight > img.height) {
+        img.classList.add('img-zoomable');
+        img.onclick = this.onImgPreview;
+      } else {
+        img.classList.remove('img-zoomable');
+        img.onclick = null;
+      }
+    },
+    updateImgPreviewAll() {
+      this.$refs['markdown'].querySelectorAll('img').forEach(i => {
+        if (i.complete) {
+          this.updateImgPreview(i);
+        } else {
+          i.onload = event => {
+            event.target.onload = null;
+            this.updateImgPreview(event.target);
+          };
+        }
+      });
+    },
     ...mapActions({ getHtml: 'getHtml' })
   },
   asyncComputed: {
@@ -36,8 +72,19 @@ export default {
       return this.processing ? '' : await this.getHtml(this.url);
     }
   },
-  created() {
+  mounted() {
+    this.$nextTick(function() {
+      window.addEventListener('resize', this.onWindowResize);
+    });
     window.c = this;
+  },
+  updated() {
+    this.$nextTick(function() {
+      this.updateImgPreviewAll();
+    });
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onWindowResize);
   }
 };
 </script>

@@ -25,4 +25,14 @@
     border: 1px solid $grey-lighter;
     border-radius: 0.25em;
   }
+
+  img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+
+    &.img-zoomable {
+      cursor: zoom-in;
+    }
+  }
 }

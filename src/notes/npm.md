@@ -3,6 +3,8 @@
   "tags": ["npm", "node", "nodejs", "package"]
 }
 -->
+![NPM Logo](img/npm_logo.png)
+
 # Менеджер пакетов npm
 
 Список глобальных установленных пакетов, которые не имеют зависимостей (корневые):
@@ -13,3 +15,5 @@
 
 Обновление одного пакета (глобального):
 `npm update -g <package_name>`
+
+![Screenshot](img/U6AfG.png)

@@ -13,7 +13,7 @@ export default {
   },
   computed: {
     url: function() {
-      return '#/note=' + this.$props.item.url;
+      return '#/' + this.$props.item.url;
     }
   }
 };

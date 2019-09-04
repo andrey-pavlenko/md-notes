@@ -12,8 +12,15 @@ export default new Router({
       name: 'contents',
       component: Contents
     },
+    // {
+    //   path: '/note=:url',
+    //   name: 'note',
+    //   component: () =>
+    //     import(/* webpackChunkName: "note" */ '@/views/note.vue'),
+    //   props: true
+    // },
     {
-      path: '/note=:url',
+      path: '/:url',
       name: 'note',
       component: () =>
         import(/* webpackChunkName: "note" */ '@/views/note.vue'),

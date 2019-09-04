@@ -1,12 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { init as initRepository } from './modules/repository';
+import {
+  init as initRepository,
+  resolve as resolveRepository
+} from './modules/repository';
 import { load as loadNote } from './modules/note';
 import { load as loadContents } from './modules/contents';
 import { load as loadTags } from './modules/tags';
 import Marked from 'marked';
 
 Vue.use(Vuex);
+
+window.resolveRepository = resolveRepository;
 
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
@@ -55,6 +60,9 @@ const store = new Vuex.Store({
       commit('updateProcessing', true);
       try {
         const files = await initRepository('notes/contents.json');
+        Marked.setOptions({
+          baseUrl: resolveRepository('')
+        });
         const errorCallback = errors => console.info('Show error', errors);
         const notes = await loadNote(files, errorCallback);
         const contents = await loadContents(notes, errorCallback);
