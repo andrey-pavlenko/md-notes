@@ -53,7 +53,7 @@ const store = new Vuex.Store({
       state.contents = contents;
     },
     updateTags(state, tags) {
-      state.tags = tags;
+      state.tags = tags.sort((a, b) => a.label.localeCompare(b.label));
     }
   },
   actions: {
