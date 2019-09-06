@@ -10,5 +10,7 @@
   * Preview **done**
     * Масштабирование в Preview **done**
 * Переход из статьи по клику на тег на список статей по тегу **done**
-  * Теперь в storybook возникает ошибка router-link -- неизвестный компонент
+  * В storybook возникает ошибка router-link -- заменил на fake-router-link **done**
+  * Клик по tag-item вызывает :click -- fake-router-link использует action **done**
 * Стили code и pre -- некрасивые **done**
+* Запуск Marked.js выполнять в Worker

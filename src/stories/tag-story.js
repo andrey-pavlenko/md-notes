@@ -5,6 +5,7 @@ import { action } from '@storybook/addon-actions';
 import TagItem from '../components/tags/tag-item';
 import TagsContainer from '../components/tags/tags-container';
 import Tags from '../components/tags/tags';
+import './fake-router-link';
 
 function random(min, max) {
   min = Math.ceil(min);

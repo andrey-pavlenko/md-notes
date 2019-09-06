@@ -2,7 +2,7 @@
   .field.is-grouped.is-grouped-multiline
     .control(v-for="tag in tags" :key="tag.label")
       router-link(:to="'/tag='+tag.label")
-        TagItem(:label="tag.label" :count="tag.count" @click.native="$emit('click', tag.label)")
+        TagItem(:label="tag.label" :count="tag.count")
 </template>
 
 <script>
