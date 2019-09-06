@@ -1,7 +1,8 @@
 <template lang="pug">
 div
-  p Содержание
   Spinner(v-if="processing")
+  TagsContainer(:tags="tags")
+  p Содержание
   ul
     ContentsItem(v-for="item in contents", :key="item.url", :item="item")
 </template>
@@ -12,13 +13,15 @@ div
 import { mapState } from 'vuex';
 import ContentsItem from '@/components/contents-item';
 import Spinner from '@/components/spinner';
+import TagsContainer from '@/components/tags/tags-container';
 
 export default {
-  components: { ContentsItem, Spinner },
+  components: { ContentsItem, Spinner, TagsContainer },
   computed: {
     ...mapState({
       processing: 'processing',
-      contents: 'contents'
+      contents: 'contents',
+      tags: 'tags'
     })
   }
 };

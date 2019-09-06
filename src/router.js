@@ -12,13 +12,12 @@ export default new Router({
       name: 'contents',
       component: Contents
     },
-    // {
-    //   path: '/note=:url',
-    //   name: 'note',
-    //   component: () =>
-    //     import(/* webpackChunkName: "note" */ '@/views/note.vue'),
-    //   props: true
-    // },
+    {
+      path: '/tag=:label',
+      name: 'tag',
+      component: () => import(/* webpackChunkName: "tag" */ '@/views/tag.vue'),
+      props: true
+    },
     {
       path: '/:url',
       name: 'note',

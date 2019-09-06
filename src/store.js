@@ -6,7 +6,7 @@ import {
 } from './modules/repository';
 import { load as loadNote } from './modules/note';
 import { load as loadContents } from './modules/contents';
-import { load as loadTags } from './modules/tags';
+import { load as loadTags, notesByTag } from './modules/tags';
 import Marked from 'marked';
 
 Vue.use(Vuex);
@@ -30,7 +30,8 @@ const store = new Vuex.Store({
           return note.meta.tags.includes(t.label);
         }
         return false;
-      })
+      }),
+    notesByTag: state => tag => notesByTag(state.notes, tag)
   },
   mutations: {
     updateNotes(state, notes) {
