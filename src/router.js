@@ -19,6 +19,17 @@ export default new Router({
       props: true
     },
     {
+      path: '/tags',
+      name: 'tags',
+      component: () => import(/* webpackChunkName: "tags" */ '@/views/tags.vue')
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () =>
+        import(/* webpackChunkName: "search" */ '@/views/search.vue')
+    },
+    {
       path: '/:url',
       name: 'note',
       component: () =>

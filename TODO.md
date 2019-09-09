@@ -5,12 +5,12 @@
   * Поиск
 * Переделать modules/*.ts на классы
 * Сделать тесты с обработкой ошибок
-* Картинки в статьях **done**
-  * Ограничить максимальные размеры картинок **done**
-  * Preview **done**
-    * Масштабирование в Preview **done**
-* Переход из статьи по клику на тег на список статей по тегу **done**
-  * В storybook возникает ошибка router-link -- заменил на fake-router-link **done**
-  * Клик по tag-item вызывает :click -- fake-router-link использует action **done**
-* Стили code и pre -- некрасивые **done**
+* ~Картинки в статьях **done**~
+  * ~Ограничить максимальные размеры картинок **done**~
+  * ~Preview **done**~
+    * ~Масштабирование в Preview **done**~
+* ~Переход из статьи по клику на тег на список статей по тегу **done**~
+  * ~В storybook возникает ошибка router-link -- заменил на fake-router-link **done**~
+  * ~Клик по tag-item вызывает :click -- fake-router-link использует action **done**~
+* ~Стили code и pre -- некрасивые **done**~
 * Запуск Marked.js выполнять в Worker

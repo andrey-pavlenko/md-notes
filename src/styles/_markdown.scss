@@ -1,43 +1,4 @@
 .markdown {
-  padding: 0 1em;
-  box-sizing: border-box;
-
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-  }
-    
-  $_sizes: $size-2, $size-3, $size-4, $size-5, $size-6, $size-7;
-  
-  @for $i from 1 to length($_sizes) {
-    #{'h' + $i} {
-      font-size: nth($_sizes, $i);
-      line-height: 1.2;
-    }
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p {
-    margin: 0.5rem 0;
-  }
-
-  ul, ol {
-    margin: 0 0 0.75em 1.5em;
-    padding: 0;
-  }
-
-  ul {
-    list-style: initial;
-  }
-  
-  li p {
-    margin: unset;
-  }
-
   code {
     color: $code;
     border: 1px solid $grey-lighter;
@@ -64,20 +25,6 @@
 
     &.img-zoomable {
       cursor: zoom-in;
-    }
-  }
-
-  table {
-    border-collapse: collapse;
-    border-spacing: 0;
-
-    td, th {
-      padding: 0.5em;
-      vertical-align: top;
-    }
-
-    td {
-      border-top: 1px solid $grey-lighter;
     }
   }
 }

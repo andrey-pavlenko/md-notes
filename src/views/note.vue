@@ -1,7 +1,7 @@
 <template lang="pug">
 div(v-if="processing")
   Spinner
-div(v-else)
+.content(v-else)
   TagsContainer(v-if="tags.length", :tags="tags")
   div.markdown(v-html="html", ref="markdown")
   ImgPreview(v-if="imgPreviewSrc", :src="imgPreviewSrc", @close="imgPreviewSrc=''")
