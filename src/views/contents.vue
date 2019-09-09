@@ -2,24 +2,20 @@
 div
   Spinner(v-if="processing")
   p Содержание
-  .content
-    ul
-      ContentsItem(v-for="item in contents", :key="item.url", :item="item")
+  Contents(:contents="contents")
 </template>
 
 <script>
 import { mapState } from 'vuex';
-import ContentsItem from '@/components/contents-item';
+import Contents from '@/components/contents/index';
 import Spinner from '@/components/spinner';
-import TagsContainer from '@/components/tags/tags-container';
 
 export default {
-  components: { ContentsItem, Spinner, TagsContainer },
+  components: { Contents, Spinner },
   computed: {
     ...mapState({
       processing: 'processing',
-      contents: 'contents',
-      tags: 'tags'
+      contents: 'contents'
     })
   }
 };
