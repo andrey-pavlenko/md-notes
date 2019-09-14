@@ -12,6 +12,17 @@ interface Meta {
   children?: string[]
 };
 
+interface TagItem {
+  label: string,
+  count: number
+};
+
+interface ContentsItem {
+  title: string,
+  url: string,
+  children?: ContentsItem[]
+};
+
 function createNote(url: string, content: string): Note | null {
   return content === null ? null : {
     url: url,
@@ -54,4 +65,31 @@ function getMetaFromComment(text: string): Meta {
   );
 }
 
-export { Note, Meta, createNote };
+function tags(notes: Note[]): TagItem[] {
+  const tags: TagItem[] = [];
+
+  notes
+    .filter(note => note !== null)
+    .forEach(note => {
+      if (note.meta.tags && note.meta.tags.length) {
+        note.meta.tags.forEach(t => {
+          const tag: TagItem = tags.find(tag => tag.label === t);
+          if (tag) {
+            tag.count += 1;
+          } else {
+            tags.push({
+              label: t,
+              count: 1,
+            });
+          }
+        });
+      }
+    });
+  return tags;
+}
+
+function notesByTag(notes: Note[], tag: string): Note[] {
+  return notes.filter(note => note && note.meta && note.meta.tags && note.meta.tags.includes(tag));
+}
+
+export { Note, Meta, TagItem, ContentsItem, createNote, tags, notesByTag };
