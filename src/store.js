@@ -94,5 +94,6 @@ const store = new Vuex.Store({
 });
 
 window.store = store;
+window.marked = Marked;
 
 export default store;

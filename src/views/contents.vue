@@ -1,7 +1,6 @@
 <template lang="pug">
 div
   Spinner(v-if="processing")
-  p Содержание
   Contents(:contents="contents")
 </template>
 
