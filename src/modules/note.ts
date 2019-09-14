@@ -1,20 +1,34 @@
-import { load as loadRepository } from './repository';
-import { Meta, Note, ErrorCallback } from './types';
+interface Note {
+  url: string,
+  content: any,
+  meta: Meta,
+  html?: string
+};
 
-function load(
-  target: string | string[],
-  errorCallback?: ErrorCallback
-): Promise<Note[]> {
-  return new Promise(resolve => {
-    loadRepository(target, errorCallback).then(notes => {
-      resolve(
-        notes.map(n => {
-          n.meta = getMeta(n.content);
-          return n;
-        })
-      );
-    });
-  });
+interface Meta {
+  title?: string,
+  tags?: string[],
+  related?: string[],
+  children?: string[]
+};
+
+function createNote(url: string, content: string): Note | null {
+  return content === null ? null : {
+    url: url,
+    content: content,
+    meta: createMeta(content)
+  };
+}
+
+function createMeta(content: string): Meta | undefined {
+  const meta: Meta = getMetaFromComment(content);
+  if (!meta.title) {
+    const title = getTitle(content);
+    if (title) {
+      meta.title = title;
+    }
+  }
+  return meta;
 }
 
 function getTitle(text: string): string | undefined {
@@ -40,15 +54,4 @@ function getMetaFromComment(text: string): Meta {
   );
 }
 
-function getMeta(text: string): Meta {
-  const meta: Meta = getMetaFromComment(text);
-  if (!meta.title) {
-    const title = getTitle(text);
-    if (title) {
-      meta.title = title;
-    }
-  }
-  return meta;
-}
-
-export { load };
+export { Note, Meta, createNote };
