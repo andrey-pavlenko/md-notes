@@ -1,79 +1,94 @@
 import axios from 'axios';
-import { Note, Error, ErrorCallback } from './types';
 
-let _base: string;
+const REQUEST_TIMEOUT = 10000;
 
-function init(url): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(url)
-      .then(response => {
-        _base = response.data.base || '';
-        if (!_base.endsWith('/')) _base += '/';
-        resolve(response.data.files || []);
-      })
-      .catch(error => {
-        reject(error.response);
-      });
-  });
-}
+class RepositoryLoadError {
+  constructor(public reason: any) {}
+};
 
-/**
- * Bad behavior
- * expect(resolve('../test1.md')).toEqual('/notes/test1.md');
- */
-function resolve(path: string): string {
-  if (_base) {
-    if (path.startsWith('/')) return path;
-    return _base + path.replace(/^\.*\//, '');
-  } else {
-    return path;
-  }
-}
+interface LoadError {
+  url: string,
+  reason: any
+};
 
-function load(
-  target: string | string[],
-  errorCallback?: ErrorCallback
-): Promise<Note[]> {
-  const resolvePath = resolve;
+class Repository {
+  private _contentsUrl: string = '';
+  private _baseUrl: string = '';
+  private _files: string[] = [];
 
-  class ErrorLoad {
-    reason: any;
-
-    constructor(reason: any) {
-      this.reason = reason;
-    }
-  }
-
-  return new Promise(resolve => {
-    const targets: string[] = Array.prototype.concat(target);
-    Promise.all(
-      targets
-        .map(t => axios.get(resolvePath(t)))
-        .map(p => p.catch(e => new ErrorLoad(e.response)))
-    ).then(results => {
-      const notes: Note[] = [];
-      const errors: Error[] = [];
-      results.forEach((r, i) => {
-        if (r instanceof ErrorLoad) {
-          errors.push({
-            url: targets[i],
-            reason: r.reason
-          });
-        } else {
-          const note: Note = {
-            url: targets[i],
-            content: r.data
-          };
-          notes.push(note);
-        }
-      });
-      if (errorCallback && errors.length) {
-        errorCallback(errors);
-      }
-      resolve(notes);
+  /**
+   * Response should be JSON {
+   *   base: '/some/base/url',
+   *   files: ['file-01.md', 'file-02.md']
+   * }
+   * @param url: string
+   * @throws axios errors
+   */
+  public async init(url: string): Promise<string[]> {
+    const response = await axios.get(url, {
+      timeout: REQUEST_TIMEOUT
     });
-  });
-}
+    this._contentsUrl = url;
+    let baseUrl = response.data.base || '';
+    if (!baseUrl.endsWith('/')) baseUrl += '/';
+    this._baseUrl = baseUrl;
+    this._files = response.data.files || [];
+    return this._files;
+  }
 
-export { init, resolve, load };
+  get contentsUrl(): string {
+    return this._contentsUrl;
+  }
+
+  get baseUrl(): string {
+    return this._baseUrl;
+  }
+
+  get files(): string[] {
+    return this._files;
+  }
+  
+  /**
+   * Bad behavior
+   * expect(resolve('../test1.md')).toEqual('/notes/test1.md');
+   */
+  resolve(path: string): string {
+    if (path.startsWith('/')) return path;
+    return this.baseUrl + path.replace(/^\.*\//, '');
+  }
+
+  /**
+   * Resolves relativeUrls with #resolve, load all, if any file error 
+   * null placed to results => ['content', null, 'content']
+   * @param relativeUrls: string | string []
+   * @param errorsCallback: function (errors: LoadError[])
+   * @throws Nothing
+   */
+  async load(relativeUrls: string | string[], errorsCallback?: (errors: LoadError[]) => void): Promise<string[]> {
+    const urls = Array.prototype.concat(relativeUrls);
+    return new Promise(resolve => { 
+      Promise.all(urls
+        .map(url => axios.get(this.resolve(url), { timeout: REQUEST_TIMEOUT }))
+        .map(promise => promise.catch(error => new RepositoryLoadError(error.response)))
+      ).then(results => {
+        const datas: string[] = [];
+        const errors = [];
+        results.forEach((result, idx) => {
+          if (result instanceof RepositoryLoadError) {
+            errors.push({
+              url: urls[idx],
+              reason: result.reason
+            });
+            datas.push(null);
+          } else {
+            datas.push(result.data);
+          }
+        });
+        if (errors.length && errorsCallback) errorsCallback(errors);
+        resolve(datas);
+      });
+    });
+  }
+};
+
+export { Repository, LoadError };
