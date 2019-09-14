@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Repository } from '../repository';
+import { init, load } from '../repository';
 import { createNote, tags, notesByTag } from '../note';
 import { notFoundReason } from './spec-utils/index';
 
@@ -24,9 +24,8 @@ describe('Tags', () => {
     require('axios').__set('tags-00', {
       data: data,
     });
-    const repository = new Repository();
-    const files = await repository.init('tags-00');
-    notes = await repository.load(files, errorCallback);
+    const files = await init('tags-00');
+    notes = await load(files, errorCallback);
     notes = notes.map((content, idx) => createNote(files[idx], content));
   });
 

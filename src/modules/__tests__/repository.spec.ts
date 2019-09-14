@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { Repository } from '../repository';
+import { init, baseUrl, contentsUrl, resolve, load } from '../repository';
 import { notFoundReason  } from './spec-utils';
 
 jest.mock('axios');
@@ -13,19 +13,16 @@ describe('Repository', () => {
     };
     const url = 'http://test.com';
     require('axios').__set(url, { data });
-    const repository = new Repository();
-    const files = await repository.init(url);
+    const files = await init(url);
     expect(files).toEqual(data.files);
-    expect(repository.files).toEqual(data.files);
-    expect(repository.baseUrl).toEqual(data.base + '/');
-    expect(repository.contentsUrl).toEqual(url);
+    expect(baseUrl()).toEqual(data.base + '/');
+    expect(contentsUrl()).toEqual(url);
     require('axios').__unset(url);
   });
 
   it('contents: not found', async () => {
-    const repository = new Repository();
     try {
-      await repository.init('http://test.com');
+      await init('http://test.com');
       fail('No exception');
     } catch (e) {
       expect(e.response).toEqual(notFoundReason);
@@ -39,22 +36,20 @@ describe('Repository', () => {
     };
     const url = 'http://test.com';
     require('axios').__set(url, { data });
-    const repository = new Repository();
     // Success load
-    await repository.init(url);
-    expect(repository.files).toEqual(data.files);
-    expect(repository.baseUrl).toEqual(data.base);
-    expect(repository.contentsUrl).toEqual(url);
+    const files = await init(url);
+    expect(files).toEqual(data.files);
+    expect(baseUrl()).toEqual(data.base);
+    expect(contentsUrl()).toEqual(url);
     require('axios').__unset(url);
     // Load fail
     try {
-      await repository.init(url);
+      await init(url);
       fail('No exception');
     } catch (e) {
       expect(e.response).toEqual(notFoundReason);
-      expect(repository.files).toEqual(data.files);
-      expect(repository.baseUrl).toEqual(data.base);
-      expect(repository.contentsUrl).toEqual(url);
+      expect(baseUrl()).toEqual(data.base);
+      expect(contentsUrl()).toEqual(url);
     }
   });
 
@@ -65,13 +60,12 @@ describe('Repository', () => {
       files: ['test1.md', 'test2.md', 'test3.md']
     };
     require('axios').__set(url, { data });
-    const repository = new Repository();
-    await repository.init(url);
-    expect(repository.resolve('test1.md')).toEqual('/notes/test1.md');
-    expect(repository.resolve('./test1.md')).toEqual('/notes/test1.md');
-    expect(repository.resolve('../test1.md')).toEqual('/notes/test1.md');
-    expect(repository.resolve('.test1.md')).toEqual('/notes/.test1.md');
-    expect(repository.resolve('/test1.md')).toEqual('/test1.md');
+    await init(url);
+    expect(resolve('test1.md')).toEqual('/notes/test1.md');
+    expect(resolve('./test1.md')).toEqual('/notes/test1.md');
+    expect(resolve('../test1.md')).toEqual('/notes/test1.md');
+    expect(resolve('.test1.md')).toEqual('/notes/.test1.md');
+    expect(resolve('/test1.md')).toEqual('/test1.md');
     require('axios').__unset(url);
   });
 
@@ -83,9 +77,8 @@ describe('Repository', () => {
     };
     require('axios').__set(url, { data });
     const errorCallback = jest.fn();
-    const repository = new Repository();
-    await repository.init(url);
-    const results: string[] = await repository.load(data.files, errorCallback);
+    await init(url);
+    const results: string[] = await load(data.files, errorCallback);
     expect(results).toHaveLength(data.files.length);
     results.forEach(result => expect(typeof result).toBe('string'));
     expect(errorCallback).not.toHaveBeenCalled();
@@ -100,9 +93,8 @@ describe('Repository', () => {
     };
     require('axios').__set(url, { data });
     const errorCallback = jest.fn();
-    const repository = new Repository();
-    await repository.init(url);
-    const results: string[] = await repository.load(data.files, errorCallback);
+    await init(url);
+    const results: string[] = await load(data.files, errorCallback);
     expect(results).toHaveLength(data.files.length);
     results.slice(0, -1).forEach(result => expect(typeof result).toBe('string'));
     results.slice(-1).forEach(result => expect(result).toBeNull());
@@ -122,9 +114,8 @@ describe('Repository', () => {
     };
     require('axios').__set(url, { data });
     const errorCallback = jest.fn();
-    const repository = new Repository();
-    await repository.init(url);
-    const results: string[] = await repository.load(data.files, errorCallback);
+    await init(url);
+    const results: string[] = await load(data.files, errorCallback);
     expect(results).toHaveLength(data.files.length);
     results.forEach(result => expect(result).toBeNull());
     expect(errorCallback).toHaveBeenCalledTimes(1);
@@ -142,9 +133,8 @@ describe('Repository', () => {
     };
     require('axios').__set(url, { data });
     const errorCallback = jest.fn();
-    const repository = new Repository();
-    await repository.init(url);
-    const results: string[] = await repository.load('test1.md', errorCallback);
+    await init(url);
+    const results: string[] = await load('test1.md', errorCallback);
     expect(results).toHaveLength(1);
     expect(typeof results[0]).toEqual('string');
     expect(errorCallback).not.toHaveBeenCalled();
@@ -158,9 +148,8 @@ describe('Repository', () => {
     };
     require('axios').__set(url, { data });
     const errorCallback = jest.fn();
-    const repository = new Repository();
-    await repository.init(url);
-    const results: string[] = await repository.load('test99.md', errorCallback);
+    await init(url);
+    const results: string[] = await load('test99.md', errorCallback);
     expect(results).toHaveLength(1);
     expect(results[0]).toBeNull();
     expect(errorCallback).toHaveBeenCalledTimes(1);
