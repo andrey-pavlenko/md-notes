@@ -18,7 +18,7 @@ const noteMarkdown = `### Icon sprites should be imported to project
 
 \`xlink:href\` is [depricated](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/xlink:href) use \`href\` instead.`;
 
-const icons = ['search', 'backspace', 'note', 'tags'];
+const icons = ['search', 'backspace', 'note', 'tags', 'zoom-in', 'zoom-out'];
 
 storiesOf('Icons', module).add(
   'All',

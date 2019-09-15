@@ -29,9 +29,6 @@ export default {
     $route() {
       this.isActive = false;
     }
-  },
-  mounted() {
-    window.n = this;
   }
 };
 </script>

@@ -1,13 +1,17 @@
 <template lang="pug">
-  div.img-preview.modal.is-active(tabindex="-1", ref="keydown-catcher", @keydown="onKeydown")
-    div.modal-background
+  .img-preview.modal.is-active(tabindex="-1", ref="keydown-catcher", @keydown="onKeydown")
+    .modal-background
     label.modal-content
-      input(type="checkbox", :checked="zoom")
+      input(type="checkbox", v-model="zoom")
       img(:src="src", alt="")
     button.modal-close.is-large(aria-label="close", @click="$emit('close')")
+    a.zoom-image(v-if="isTouchScreen", aria-label="zoom", @click="zoom = !zoom")
+      svg.icon
+        use(:href="zoomIcon")
 </template>
 
 <script>
+import { detect } from '../modules/touch-screen';
 export default {
   props: {
     src: {
@@ -17,8 +21,14 @@ export default {
   },
   data: function() {
     return {
-      zoom: false
+      zoom: false,
+      isTouchScreen: detect()
     };
+  },
+  computed: {
+    zoomIcon: function() {
+      return 'icons.svg#zoom-' + (this.zoom ? 'out' : 'in');
+    }
   },
   methods: {
     onKeydown(event) {
