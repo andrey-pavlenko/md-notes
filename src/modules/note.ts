@@ -1,36 +1,15 @@
-import { load, LoadError } from './repository';
-
-interface Note {
-  url: string,
-  content: any,
-  meta: Meta,
-  html?: string
-};
-
-interface Meta {
-  title?: string,
-  tags?: string[],
-  related?: string[],
-  children?: string[]
-};
-
-interface TagItem {
-  label: string,
-  count: number
-};
-
-interface ContentsItem {
-  title: string,
-  url: string,
-  children?: ContentsItem[]
-};
+import { Note, Meta, ContentsItem, TagItem } from './notes.d';
+import { load } from './repository';
+import { LoadError } from './repository.d';
 
 function createNote(url: string, content: string): Note | null {
-  return content === null ? null : {
-    url: url,
-    content: content,
-    meta: createMeta(content)
-  };
+  return content === null
+    ? null
+    : {
+        url: url,
+        content: content,
+        meta: createMeta(content)
+      };
 }
 
 function createMeta(content: string): Meta | undefined {
@@ -81,7 +60,7 @@ function createTags(notes: Note[]): TagItem[] {
           } else {
             tags.push({
               label: t,
-              count: 1,
+              count: 1
             });
           }
         });
@@ -91,31 +70,41 @@ function createTags(notes: Note[]): TagItem[] {
 }
 
 function notesByTag(notes: Note[], tag: string): Note[] {
-  return notes.filter(note => note && note.meta && note.meta.tags && note.meta.tags.includes(tag));
+  return notes.filter(
+    note => note && note.meta && note.meta.tags && note.meta.tags.includes(tag)
+  );
 }
 
-async function createContents(notesRef: Note[], errorsCallback?: (errors: LoadError[]) => void): Promise<ContentsItem[]> {
-  return Promise.all(notesRef.map(note => getContentItem(note, notesRef, errorsCallback)));
+async function createContents(
+  notesRef: Note[],
+  errorsCallback?: (errors: LoadError[]) => void
+): Promise<ContentsItem[]> {
+  return Promise.all(
+    notesRef.map(note => getContentItem(note, notesRef, errorsCallback))
+  );
 }
 
-async function getContentItem(note: Note, notesRef: Note[], errorsCallback?): Promise<ContentsItem> {
+async function getContentItem(
+  note: Note,
+  notesRef: Note[],
+  errorsCallback?
+): Promise<ContentsItem> {
   if (note === null) return null;
-  
   const item: ContentsItem = {
     title: note.meta.title || note.url,
-    url: note.url,
+    url: note.url
   };
   if (note.meta.children && note.meta.children.length) {
     return new Promise(resolve => {
       Promise.all(
         note.meta.children.map(child =>
-          findOrLoadhNote(child, notesRef, errorsCallback),
+          findOrLoadhNote(child, notesRef, errorsCallback)
         )
       ).then(children => {
         Promise.all(
           children
             .filter(note => !!note)
-            .map(note => getContentItem(note, notesRef, errorsCallback)),
+            .map(note => getContentItem(note, notesRef, errorsCallback))
         ).then(i => {
           item.children = i;
           resolve(item);
@@ -126,14 +115,18 @@ async function getContentItem(note: Note, notesRef: Note[], errorsCallback?): Pr
   return item;
 }
 
-async function findOrLoadhNote(url: string, notesRef: Note[], errorsCallback?): Promise<Note> {
+async function findOrLoadhNote(
+  url: string,
+  notesRef: Note[],
+  errorsCallback?
+): Promise<Note> {
   const existsNote = notesRef.find(note => note.url === url);
   if (existsNote) {
     return existsNote;
-  } 
+  }
   const note = createNote(url, (await load(url, errorsCallback))[0]);
   if (note !== null) notesRef.push(note);
   return note;
 }
 
-export { Note, Meta, TagItem, ContentsItem, createNote, createTags, notesByTag, createContents };
+export { createNote, createTags, notesByTag, createContents };

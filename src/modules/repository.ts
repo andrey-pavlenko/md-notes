@@ -1,11 +1,7 @@
 import axios from 'axios';
+import { LoadError } from './repository.d';
 
 const REQUEST_TIMEOUT = 10000;
-
-interface LoadError {
-  url: string,
-  reason: any
-};
 
 let _contentsUrl: string = '';
 let _baseUrl: string = '';
@@ -47,22 +43,31 @@ function resolve(path: string): string {
 }
 
 class RepositoryLoadError {
-  constructor(public reason: any) {}
-};
+  reason: any;
+  constructor(reason: any) {
+    this.reason = reason;
+  }
+}
 
 /**
- * Resolves relativeUrls with #resolve, load all, if any file error 
+ * Resolves relativeUrls with #resolve, load all, if any file error
  * null placed to results => ['content', null, 'content']
  * @param relativeUrls: string | string []
  * @param errorsCallback: function (errors: LoadError[])
  * @throws Nothing
  */
-async function load(relativeUrls: string | string[], errorsCallback?: (errors: LoadError[]) => void): Promise<string[]> {
+async function load(
+  relativeUrls: string | string[],
+  errorsCallback?: (errors: LoadError[]) => void
+): Promise<string[]> {
   const urls = Array.prototype.concat(relativeUrls);
-  return new Promise(resolvePromise => { 
-    Promise.all(urls
-      .map(url => axios.get(resolve(url), { timeout: REQUEST_TIMEOUT }))
-      .map(promise => promise.catch(error => new RepositoryLoadError(error.response)))
+  return new Promise(resolvePromise => {
+    Promise.all(
+      urls
+        .map(url => axios.get(resolve(url), { timeout: REQUEST_TIMEOUT }))
+        .map(promise =>
+          promise.catch(error => new RepositoryLoadError(error.response))
+        )
     ).then(results => {
       const datas: string[] = [];
       const errors = [];
@@ -83,4 +88,4 @@ async function load(relativeUrls: string | string[], errorsCallback?: (errors: L
   });
 }
 
-export { init, resolve, load, contentsUrl, baseUrl, LoadError };
+export { init, resolve, load, contentsUrl, baseUrl };

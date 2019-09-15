@@ -1,17 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { init, load, baseUrl } from './modules/repository';
 import {
-  init as initRepository,
-  resolve as resolveRepository
-} from './modules/repository';
-import { load as loadNote } from './modules/note';
-import { load as loadContents } from './modules/contents';
-import { load as loadTags, notesByTag } from './modules/tags';
+  createNote,
+  createContents,
+  createTags,
+  notesByTag
+} from './modules/note';
 import Marked from 'marked';
 
 Vue.use(Vuex);
 
-window.resolveRepository = resolveRepository;
+const INIT_URL = 'notes/contents.json';
 
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
@@ -60,16 +60,16 @@ const store = new Vuex.Store({
     async init({ commit }) {
       commit('updateProcessing', true);
       try {
-        const files = await initRepository('notes/contents.json');
-        Marked.setOptions({
-          baseUrl: resolveRepository('')
-        });
+        const files = await init(INIT_URL);
+        Marked.setOptions({ baseUrl: baseUrl() });
         const errorCallback = errors => console.info('Show error', errors);
-        const notes = await loadNote(files, errorCallback);
-        const contents = await loadContents(notes, errorCallback);
-        commit('updateNotes', notes);
+        const notes = (await load(files, errorCallback))
+          .map((text, idx) => createNote(files[idx], text))
+          .filter(note => !!note);
+        const contents = await createContents(notes, errorCallback);
+        commit('updateNotes', notes.filter(note => !!note));
         commit('updateContents', contents);
-        commit('updateTags', loadTags(notes));
+        commit('updateTags', createTags(notes));
       } catch (e) {
         console.error(e);
       }

@@ -1,3 +1,4 @@
+/* global jest */
 const axios = jest.genMockFromModule('axios');
 const fs = require('fs');
 const path = require('path');
