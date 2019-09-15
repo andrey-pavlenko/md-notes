@@ -4,6 +4,10 @@
     border: 1px solid $grey-lighter;
     border-radius: $radius;
     padding: 0.15em 0.35em;
+
+    @media print {
+      color: $black;
+    }
   }
 
   pre {

@@ -13,4 +13,13 @@
       }
     }
   }
+
+  @media print {
+    &_tags {
+      display: none;
+    }
+    .is-four-fifths {
+      width: 100%;
+    }
+  }
 }
