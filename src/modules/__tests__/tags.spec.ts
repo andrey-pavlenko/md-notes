@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { init, load } from '../repository';
-import { createNote, tags, notesByTag } from '../note';
+import { createNote, createTags, notesByTag } from '../note';
 import { notFoundReason } from './spec-utils/index';
 
 jest.mock('axios');
@@ -39,7 +39,7 @@ describe('Tags', () => {
   });
 
   it('get tags', () => {
-    const tagItems = tags(notes);
+    const tagItems = createTags(notes);
     expect(tagItems).toEqual([
       { label: 'test1', count: 4 },
       { label: 'test2', count: 3 },
@@ -49,7 +49,7 @@ describe('Tags', () => {
   });
 
   it('by tags', () => {
-    const tagItems = tags(notes);
+    const tagItems = createTags(notes);
     tagItems.forEach(t => {
       const n = notesByTag(notes, t.label);
       expect(n.length).toEqual(t.count);

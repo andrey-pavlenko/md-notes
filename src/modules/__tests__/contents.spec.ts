@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { init, load } from '../repository';
-import { contents, createNote } from '../note';
+import { createContents, createNote } from '../note';
 import { notFoundReason } from './spec-utils';
 
 jest.mock('axios');
@@ -21,7 +21,7 @@ describe('Contents', () => {
     const errorCallback = jest.fn();
     const files = ['test1.md'];
     const notes = (await load('test1.md', errorCallback)).map((text, i) => createNote(files[i], text));
-    const cnts = await contents(notes, errorCallback);
+    const cnts = await createContents(notes, errorCallback);
     expect(cnts).toEqual([{ title: 'First item', url: 'test1.md' }]);
     expect(errorCallback).not.toHaveBeenCalled();
   });
@@ -30,7 +30,7 @@ describe('Contents', () => {
     const files = ['test1.md', 'test2.md'];
     const notes = (await load(files)).map((text, i) => createNote(files[i], text));
     expect(notes.map(note => note.url)).toEqual(files);
-    const cnts = await contents(notes);
+    const cnts = await createContents(notes);
     expect(cnts.map(t => ({ title: t.title, url: t.url }))).toEqual([
       { title: 'First item', url: 'test1.md' },
       { title: 'Second note', url: 'test2.md' }]);
@@ -48,7 +48,7 @@ describe('Contents', () => {
     const notes = (await load(files, errorCallback)).map((text, i) => createNote(files[i], text));
     expect(notes.map(n => n.url)).toEqual(files);
     expect(errorCallback).not.toHaveBeenCalled();
-    const cnts = await contents(notes, errorCallback);
+    const cnts = await createContents(notes, errorCallback);
     expect(errorCallback).toHaveBeenCalledTimes(1);
     expect(errorCallback.mock.calls[0][0]).toEqual([{
       url: 'test3-2.md',

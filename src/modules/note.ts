@@ -67,7 +67,7 @@ function getMetaFromComment(text: string): Meta {
   );
 }
 
-function tags(notes: Note[]): TagItem[] {
+function createTags(notes: Note[]): TagItem[] {
   const tags: TagItem[] = [];
 
   notes
@@ -94,7 +94,7 @@ function notesByTag(notes: Note[], tag: string): Note[] {
   return notes.filter(note => note && note.meta && note.meta.tags && note.meta.tags.includes(tag));
 }
 
-async function contents(notesRef: Note[], errorsCallback?: (errors: LoadError[]) => void): Promise<ContentsItem[]> {
+async function createContents(notesRef: Note[], errorsCallback?: (errors: LoadError[]) => void): Promise<ContentsItem[]> {
   return Promise.all(notesRef.map(note => getContentItem(note, notesRef, errorsCallback)));
 }
 
@@ -136,4 +136,4 @@ async function findOrLoadhNote(url: string, notesRef: Note[], errorsCallback?): 
   return note;
 }
 
-export { Note, Meta, TagItem, ContentsItem, createNote, tags, notesByTag, contents };
+export { Note, Meta, TagItem, ContentsItem, createNote, createTags, notesByTag, createContents };
