@@ -1,0 +1,16 @@
+.view-note {
+  @media screen and (max-width: $tablet) {
+    &_tags .field.is-grouped {
+      justify-content: center;
+    }
+    .markdown {
+      margin-left: $column-gap;
+      margin-right: $column-gap;
+
+      pre {
+        margin-left: -$column-gap;
+        margin-right: -$column-gap;
+      }
+    }
+  }
+}

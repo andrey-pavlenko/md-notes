@@ -35,3 +35,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.navbar-brand {
+  margin-left: 0 !important;
+}
+
+.navbar-menu {
+  margin-right: 0 !important;
+}
+</style>

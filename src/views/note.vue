@@ -1,10 +1,13 @@
 <template lang="pug">
-div(v-if="processing")
-  Spinner
-.content(v-else)
-  TagsContainer(v-if="tags.length", :tags="tags")
-  div.markdown(v-html="html", ref="markdown")
-  ImgPreview(v-if="imgPreviewSrc", :src="imgPreviewSrc", @close="imgPreviewSrc=''")
+.view-note
+  Spinner(v-if="processing")
+  .columns(v-else)
+      .column.is-four-fifths
+        .content.markdown(v-html="html", ref="markdown")
+      .column.view-note_tags
+        hr.is-hidden-tablet
+        TagsContainer(v-if="tags.length", :tags="tags")
+      ImgPreview(v-if="imgPreviewSrc", :src="imgPreviewSrc", @close="imgPreviewSrc=''")
 </template>
 
 <script>
