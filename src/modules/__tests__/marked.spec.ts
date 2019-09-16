@@ -5,7 +5,7 @@ describe('Marked', () => {
     expect(toHtml('```\nFirst line\nSecond line\n```\n'))
       .toEqual('<pre><code>First line\nSecond line</code></pre>');
     expect(toText('```\nFirst line\nSecond line\n```\n'))
-      .toEqual('First line\nSecond line');
+      .toEqual('First line\nSecond line\n');
   });
 
   it('blockquote', () => {

@@ -6,7 +6,7 @@ function toHtml(mdContent: string): string {
 
 class PlainTextRenderer extends marked.Renderer {
   code(code: string): string {
-    return code;
+    return code + '\n';
   }
 
   blockquote(quote: string): string {
