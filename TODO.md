@@ -18,3 +18,6 @@
 * ~Тэги в статьях справа, на узком -- снизу **done**~
 * ~Определять (touch device)[https://github.com/rafrex/detect-touch/blob/master/index.js] и показывать иконку zoom to fit/1:1 при просмотре картинок **done**~
 * ~media print в статье -- спрятать navbar, исправить тэги **done**~
+* Попробовать разместить приложение на zeit.co
+  * Привязать бесплатный домен www.freenom.com
+  * Подкючить в качестве источника Yandex disk или Google drive
