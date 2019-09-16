@@ -7,7 +7,15 @@ import {
   createTags,
   notesByTag
 } from './modules/note';
-import Marked from 'marked';
+import {
+  toHtml,
+  toText,
+  setOptions as setMarkedOptions
+} from './modules/marked';
+import natural from 'natural';
+
+window.natural = natural;
+window.toText = toText;
 
 Vue.use(Vuex);
 
@@ -61,7 +69,7 @@ const store = new Vuex.Store({
       commit('updateProcessing', true);
       try {
         const files = await init(INIT_URL);
-        Marked.setOptions({ baseUrl: baseUrl() });
+        setMarkedOptions({ baseUrl: baseUrl() });
         const errorCallback = errors => console.info('Show error', errors);
         const notes = (await load(files, errorCallback))
           .map((text, idx) => createNote(files[idx], text))
@@ -84,7 +92,7 @@ const store = new Vuex.Store({
       }
       if (!note.html) {
         commit('updateProcessing', true);
-        note.html = Marked(note.content);
+        note.html = toHtml(note.content);
         commit('updateNote', note);
         commit('updateProcessing', false);
       }
@@ -92,5 +100,7 @@ const store = new Vuex.Store({
     }
   }
 });
+
+window.store = store;
 
 export default store;

@@ -25,12 +25,12 @@ describe('Marked', () => {
     [1, 2, 3, 4, 5, 6].forEach(n => {
       let md = '#'.repeat(n) + ' Title';
       expect(toHtml(md)).toEqual(`<h${n} id="title">Title</h${n}>\n`);
-      expect(toText(md)).toEqual('Title');
+      expect(toText(md)).toEqual('Title\n');
     });
     expect(toHtml('Title\n=====')).toEqual('<h1 id="title">Title</h1>\n');
-    expect(toText('Title\n=====')).toEqual('Title');
+    expect(toText('Title\n=====')).toEqual('Title\n');
     expect(toHtml('Title\n-----')).toEqual('<h2 id="title">Title</h2>\n');
-    expect(toText('Title\n-----')).toEqual('Title');
+    expect(toText('Title\n-----')).toEqual('Title\n');
   });
 
   it('hr', () => {
