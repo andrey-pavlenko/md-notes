@@ -2,18 +2,24 @@ import { TrieNode } from './trie-node';
 
 class Trie {
   public static deserialize(data: any[]): Trie {
-    const trie = new Trie();
-    trie.root = TrieNode.deserialize(data);
-    return trie;
+    return new Trie(TrieNode.deserialize(data));
   }
 
-  public root = new TrieNode();
+  protected xRoot: TrieNode;
+
+  constructor(root?: TrieNode) {
+    if (root) {
+      this.xRoot = root;
+    } else {
+      this.xRoot = new TrieNode();
+    }
+  }
 
   public serialize(): any[] {
-    return this.root.serialize();
+    return this.xRoot.serialize();
   }
 
-  public add(input: string, node: TrieNode= this.root): void {
+  public add(input: string, node: TrieNode= this.xRoot): void {
     if (input.length === 0) {
       node.setEnd();
       return;
@@ -26,7 +32,7 @@ class Trie {
   }
 
   public isWord(word: string): boolean {
-    let node = this.root;
+    let node = this.xRoot;
     while (word.length > 1) {
       if (!node.has(word[0])) {
         return false;
@@ -40,8 +46,8 @@ class Trie {
 
   public print(): string[] {
     const words = [];
-    const search = (input: string, node: TrieNode= this.root) => {
-      node = node || this.root;
+    const search = (input: string, node: TrieNode= this.xRoot) => {
+      node = node || this.xRoot;
       if (node.size !== 0) {
         for (const letter of node.keys) {
           search(input.concat(letter), node.get(letter));

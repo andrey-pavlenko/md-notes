@@ -53,5 +53,6 @@ describe('Trie', () => {
     const newSerial = newTrie.serialize();
     expect(newSerial).toEqual(serial);
     words.forEach((word) => expect(newTrie.isWord(word)).toBeTruthy());
+    expect(newTrie.print()).toEqual(trie.print());
   });
 });

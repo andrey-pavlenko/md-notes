@@ -17,45 +17,45 @@ class TrieNode {
     return node;
   }
 
-  private _keys: Map<string, TrieNode>;
-  private _end: boolean;
+  private xKeys: Map<string, TrieNode>;
+  private xEnd: boolean;
 
   constructor() {
-    this._keys = new Map();
-    this._end = false;
+    this.xKeys = new Map();
+    this.xEnd = false;
   }
 
   get end() {
-    return this._end;
+    return this.xEnd;
   }
 
   get size(): number {
-    return this._keys.size;
+    return this.xKeys.size;
   }
 
   get keys(): IterableIterator<string> {
-    return this._keys.keys();
+    return this.xKeys.keys();
   }
 
   public has(key: string): boolean {
-    return this._keys.has(key);
+    return this.xKeys.has(key);
   }
 
   public get(key: string): TrieNode {
-    return this._keys.get(key);
+    return this.xKeys.get(key);
   }
 
   public set(key: string, node: TrieNode): void {
-    this._keys.set(key, node);
+    this.xKeys.set(key, node);
   }
 
   public setEnd(): void {
-    this._end = true;
+    this.xEnd = true;
   }
 
   public serialize(): TrieNodeTuple[] {
     const nodes: TrieNodeTuple[] = [];
-    this._keys.forEach((value, key) => nodes.push([key, value.end, value.serialize()]));
+    this.xKeys.forEach((value, key) => nodes.push([key, value.end, value.serialize()]));
     return nodes;
   }
 }
