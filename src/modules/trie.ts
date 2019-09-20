@@ -1,6 +1,9 @@
 import { TrieNode } from './trie-node';
 
 class Trie {
+  /**
+   * Restore Trie from serialized
+   */
   public static deserialize(data: any[]): Trie {
     return new Trie(TrieNode.deserialize(data));
   }
@@ -8,61 +11,97 @@ class Trie {
   protected xRoot: TrieNode;
 
   constructor(root?: TrieNode) {
-    if (root) {
+    if (root instanceof TrieNode) {
       this.xRoot = root;
     } else {
       this.xRoot = new TrieNode();
     }
   }
 
+  /**
+   * Serialize Trie to array
+   */
   public serialize(): any[] {
     return this.xRoot.serialize();
   }
 
-  public add(input: string, node: TrieNode= this.xRoot): void {
-    if (input.length === 0) {
-      node.setEnd();
-      return;
-    } else if (!node.has(input[0])) {
-      node.set(input[0], new TrieNode());
-      return this.add(input.substr(1), node.get(input[0]));
+  public add(input: string | string[]): Trie {
+    const add = (str: string, node: TrieNode = this.xRoot): void => {
+      if (str.length === 0) {
+        node.setEnd();
+        return;
+      } else if (!node.has(str[0])) {
+        node.set(str[0], new TrieNode());
+        return add(str.substr(1), node.get(str[0]));
+      } else {
+        return add(str.substr(1), node.get(str[0]));
+      }
+    };
+    if (Array.isArray(input)) {
+      input.forEach((word) => add(word));
     } else {
-      return this.add(input.substr(1), node.get(input[0]));
+      add(input);
     }
+    return this;
   }
 
-  public isWord(word: string): boolean {
+  public clear(): Trie {
+    this.xRoot = new TrieNode();
+    return this;
+  }
+
+  public contains(word: string): boolean {
+    const node = this.findPrefix(word);
+    return node && node.end;
+  }
+
+  get words(): string[] {
+    return this.findSuffixes(this.xRoot);
+  }
+
+  /**
+   * Returns all words starts with prefix
+   */
+  public match(prefix: string): string[] {
+    const node = this.findPrefix(prefix);
+    if (node !== null) {
+      const suffixes = this.findSuffixes(node);
+      return suffixes.map((suffix) => prefix + suffix);
+    }
+    return [];
+  }
+
+  protected findPrefix(input: string): TrieNode {
     let node = this.xRoot;
-    while (word.length > 1) {
-      if (!node.has(word[0])) {
-        return false;
+    while (input.length > 0) {
+      if (!node.has(input[0])) {
+        return null;
       } else {
-        node = node.get(word[0]);
-        word = word.substr(1);
+        node = node.get(input[0]);
+        input = input.substr(1);
       }
     }
-    return node.has(word) && node.get(word).end;
+    return node;
   }
 
-  public print(): string[] {
-    const words = [];
-    const search = (input: string, node: TrieNode= this.xRoot) => {
-      node = node || this.xRoot;
-      if (node.size !== 0) {
-        for (const letter of node.keys) {
-          search(input.concat(letter), node.get(letter));
+  protected findSuffixes(node: TrieNode): string[] {
+    const suffixes: string[] = [];
+    const search = (subNode: TrieNode, input: string = ''): void => {
+      if (subNode.size !== 0) {
+        for (const letter of subNode.keys) {
+          search(subNode.get(letter), input.concat(letter));
         }
-        if (node.end) {
-          words.push(input);
+        if (subNode.end) {
+          suffixes.push(input);
         }
       } else {
         if (input.length > 0) {
-          words.push(input);
+          suffixes.push(input);
         }
       }
-    };
-    search('');
-    return words;
+     };
+    search(node);
+    return suffixes;
   }
 }
 
