@@ -7,15 +7,7 @@ import {
   createTags,
   notesByTag
 } from './modules/note';
-import {
-  toHtml,
-  toText,
-  setOptions as setMarkedOptions
-} from './modules/marked';
-import natural from 'natural';
-
-window.natural = natural;
-window.toText = toText;
+import { toHtml, setOptions as setMarkedOptions } from './modules/marked';
 
 Vue.use(Vuex);
 
