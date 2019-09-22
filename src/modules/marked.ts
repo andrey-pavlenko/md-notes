@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import * as marked from 'marked';
 
 function toHtml(mdContent: string): string {
@@ -5,78 +7,78 @@ function toHtml(mdContent: string): string {
 }
 
 class PlainTextRenderer extends marked.Renderer {
-  code(code: string): string {
+  public code(code: string): string {
     return code + '\n';
   }
 
-  blockquote(quote: string): string {
+  public blockquote(quote: string): string {
     return quote;
   }
 
-  html(): string {
+  public html(): string {
     return '';
   }
 
-  heading(text: string): string {
+  public heading(text: string): string {
     return text + '\n';
   }
 
-  hr(): string {
+  public hr(): string {
     return '';
   }
 
-  list(body: string): string {
+  public list(body: string): string {
     return body;
   }
 
-  listitem(text: string): string {
+  public listitem(text: string): string {
     return text + '\n';
   }
 
-  paragraph(text: string): string {
+  public paragraph(text: string): string {
     return text + '\n';
   }
 
-  table(header: string, body: string): string {
+  public table(header: string, body: string): string {
     return header + body;
   }
 
-  tablerow(content: string): string {
+  public tablerow(content: string): string {
     return content + '\n';
   }
 
-  tablecell(content: string): string {
+  public tablecell(content: string): string {
     return content + ' ';
   }
 
-  strong(text: string): string {
+  public strong(text: string): string {
     return text;
   }
 
-  em(text: string): string {
+  public em(text: string): string {
     return text;
   }
 
-  codespan(code: string): string {
+  public codespan(code: string): string {
     return code;
   }
 
-  del(text: string): string {
+  public del(text: string): string {
     return text;
   }
 
-  link(href: string, title: string, text: string): string {
+  public link(href: string, title: string, text: string): string {
     return text;
   }
 
-  image(): string {
+  public image(): string {
     return '';
   }
 }
 
 function toText(mdContent: string): string {
   return marked(mdContent, {
-    renderer: new PlainTextRenderer()
+    renderer: new PlainTextRenderer(),
   });
 }
 

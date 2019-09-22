@@ -22,8 +22,8 @@ describe('Marked', () => {
   });
 
   it('heading', () => {
-    [1, 2, 3, 4, 5, 6].forEach(n => {
-      let md = '#'.repeat(n) + ' Title';
+    [1, 2, 3, 4, 5, 6].forEach((n) => {
+      const md = '#'.repeat(n) + ' Title';
       expect(toHtml(md)).toEqual(`<h${n} id="title">Title</h${n}>\n`);
       expect(toText(md)).toEqual('Title\n');
     });
@@ -36,33 +36,33 @@ describe('Marked', () => {
   it('hr', () => {
     expect(toText('---')).toEqual('');
   });
-  
+
   it('list', () => {
     const items = [1, 2, 3];
-    expect(toText(items.map(n => `* List item ${n}`).join('\n')))
-      .toEqual(items.map(n => `List item ${n}\n`).join(''));
-    expect(toText(items.map(n => `- List item ${n}`).join('\n')))
-      .toEqual(items.map(n => `List item ${n}\n`).join(''));
-    expect(toText(items.map(n => `+ List item ${n}`).join('\n')))
-      .toEqual(items.map(n => `List item ${n}\n`).join(''));
-    expect(toText(items.map(n => `${n}. List item ${n}`).join('\n')))
-      .toEqual(items.map(n => `List item ${n}\n`).join(''));
+    expect(toText(items.map((n) => `* List item ${n}`).join('\n')))
+      .toEqual(items.map((n) => `List item ${n}\n`).join(''));
+    expect(toText(items.map((n) => `- List item ${n}`).join('\n')))
+      .toEqual(items.map((n) => `List item ${n}\n`).join(''));
+    expect(toText(items.map((n) => `+ List item ${n}`).join('\n')))
+      .toEqual(items.map((n) => `List item ${n}\n`).join(''));
+    expect(toText(items.map((n) => `${n}. List item ${n}`).join('\n')))
+      .toEqual(items.map((n) => `List item ${n}\n`).join(''));
   });
 
   it('paragraph', () => {
     const items = [1, 2, 3];
-    const md = items.map(n => `Paragraph No ${n}\n`).join('');
-    expect(toText(md)).toEqual(items.map(n => `Paragraph No ${n}\n`).join(''));
+    const md = items.map((n) => `Paragraph No ${n}\n`).join('');
+    expect(toText(md)).toEqual(items.map((n) => `Paragraph No ${n}\n`).join(''));
   });
 
   it('table', () => {
     const cells = [1, 2, 3];
-    const header = '| ' + cells.map(n => `Head ${n}`).join(' | ') + ' |\n' +
-      '| ' + cells.map(n => '---').join(' | ') + ' |\n';
-    const row = '| ' + cells.map(n => `Cell ${n}`).join(' | ') + ' |\n';
+    const header = '| ' + cells.map((n) => `Head ${n}`).join(' | ') + ' |\n' +
+      '| ' + cells.map((n) => '---').join(' | ') + ' |\n';
+    const row = '| ' + cells.map((n) => `Cell ${n}`).join(' | ') + ' |\n';
     expect(toText(header + row.repeat(3))).toEqual(
-      cells.map(n => `Head ${n} `).join('') + '\n' +
-      (cells.map(n => `Cell ${n} `).join('') + '\n').repeat(3)
+      cells.map((n) => `Head ${n} `).join('') + '\n' +
+      (cells.map((n) => `Cell ${n} `).join('') + '\n').repeat(3),
     );
   });
 

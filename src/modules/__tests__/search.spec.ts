@@ -1,5 +1,5 @@
-import { sentencenize, tokenize } from '../search';
-import { Trie } from '../trie';
+import { sentencenize, tokenize, removeStopWords, stopWordsRu } from '../search';
+import { Trie, weigth } from '../trie';
 
 describe('Tokenize', () => {
   it('sentencenize', () => {
@@ -19,6 +19,22 @@ describe('Tokenize', () => {
   it('tokenize', () => {
     const text = 'Моя почта test@qui-quo.ru, пишите!\nБуду ждать';
     expect(tokenize(text)).toEqual(['Моя', 'почта', 'test', 'qui', 'quo', 'ru', 'пишите', 'Буду', 'ждать']);
+  });
+
+  it('stop words ru', () => {
+    const tokens = tokenize('Александра Габышева вынудили пройти психолого-психиатрическую экспертизу, он находится под подпиской о невыезде. Как и предполагалось, на него заведено уголовное дело о призывах к экстремистской деятельности, но за что конкретно - непонятно.'.toLowerCase());
+    expect(removeStopWords(tokens, stopWordsRu))
+      .toEqual(['александра', 'габышева',
+        'вынудили', 'пройти',
+        'психолого', 'психиатрическую',
+        'экспертизу', 'находится',
+        'подпиской', 'невыезде',
+        'предполагалось', 'заведено',
+        'уголовное', 'дело',
+        'призывах', 'экстремистской',
+        'деятельности', 'конкретно',
+        'непонятно',
+    ]);
   });
 });
 
@@ -57,10 +73,10 @@ describe('Trie', () => {
   });
 
   it('match', () => {
-    const words = ['уж', 'ужин', 'ужинать', 'ужимки', 'конфета', 'конфети', 'шоколад', 'doll', 'dollar'];
+    const words = ['уж', 'ужин', 'ужинать', 'ужимки', 'конфета', 'конфети', 'шоколад', 'doll', 'dollar', 'ели'];
     const trie = new Trie();
     words.forEach((word) => trie.add(word));
-    ['уж', 'конф', 'doll'].forEach((prefix) => {
+    ['уж', 'конф', 'doll', 'ели'].forEach((prefix) => {
       expect(trie.match(prefix).sort())
         .toEqual(words.filter((w) => w.startsWith(prefix)).sort());
     });
@@ -77,5 +93,20 @@ describe('Trie', () => {
     const trie = new Trie().add(words);
     expect(trie.words.sort()).toEqual(words.sort());
     expect(trie.clear().words).toEqual([]);
+  });
+
+  it('weigth', () => {
+    const trie = new Trie();
+    const sentence = 'аккумулятор аккумулирующий значение возвращает функция callback посещения очередного элемента значение initialValue предоставлено смотрите пояснения'.split(' ');
+    trie.add(sentence);
+    let word = 'аккумул';
+    let matches = trie.match(word);
+    expect(weigth(word, matches)).toBeGreaterThan(1);
+    word = 'значение';
+    matches = trie.match(word);
+    expect(weigth(word, matches)).toBeGreaterThanOrEqual(1);
+    word = 'метод';
+    matches = trie.match(word);
+    expect(weigth(word, matches)).toEqual(0);
   });
 });

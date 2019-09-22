@@ -66,7 +66,8 @@ class Trie {
     const node = this.findPrefix(prefix);
     if (node !== null) {
       const suffixes = this.findSuffixes(node);
-      return suffixes.map((suffix) => prefix + suffix);
+      return suffixes.length ?
+        suffixes.map((suffix) => prefix + suffix) : [prefix];
     }
     return [];
   }
@@ -105,4 +106,15 @@ class Trie {
   }
 }
 
-export { Trie };
+function weigth(token: string, words: string[]): number {
+  const tokenLen = token.length;
+  if (tokenLen) {
+    const wordsWeigth = words
+      .filter((word) => word.startsWith(token))
+      .map((word) => tokenLen <= word.length ? tokenLen / word.length : 0);
+    return wordsWeigth.reduce((acc, tokenWeight) => acc + tokenWeight, 0);
+  }
+  return 0;
+}
+
+export { Trie, weigth };
