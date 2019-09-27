@@ -4,7 +4,9 @@ module.exports = {
   extends: ['plugin:vue/essential', '@vue/prettier'],
 
   env: {
-    node: true
+    browser: true,
+    commonjs: true,
+    es6: true
   },
 
   rules: {
@@ -16,8 +18,7 @@ module.exports = {
 
   parserOptions: {
     parser: 'babel-eslint'
-  },
+  }
 
-  plugins: [ '@typescript-eslint' ]
-
+  // plugins: ['@typescsript-eslint']
 };
