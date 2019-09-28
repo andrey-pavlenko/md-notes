@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { TrieNode } from './trie-node';
 
 class Trie {

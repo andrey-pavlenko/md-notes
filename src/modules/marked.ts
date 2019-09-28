@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import * as marked from 'marked';
 
 function toHtml(mdContent: string): string {

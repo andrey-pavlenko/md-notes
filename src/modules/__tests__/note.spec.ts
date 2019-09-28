@@ -5,12 +5,12 @@ import { notFoundReason } from './spec-utils/index';
 
 jest.mock('axios');
 
-describe('Note module', () => {
+describe('Note loading', () => {
   beforeAll(async () => {
     require('axios').__set('notes-00', {
       data: {
         base: path.resolve(__dirname, './cases/notes-00'),
-      }
+      },
     });
     await init('notes-00');
   });
@@ -38,7 +38,7 @@ describe('Note module', () => {
   it('Load notes-00/test2.md', async () => {
     const url = 'test3.md';
     const errorCallback = jest.fn();
-    const note = createNote(url,(await load(url, errorCallback))[0]);
+    const note = createNote(url, (await load(url, errorCallback))[0]);
     expect(errorCallback).not.toHaveBeenCalled();
     expect(note.url).toEqual(url);
     expect(note.meta).toEqual({ title: 'Simple note', tags: ['multi', 'meta'] });
@@ -48,13 +48,12 @@ describe('Note module', () => {
   it('Load notes-00/test99.md -- not exists', async () => {
     const url = 'test99.md';
     const errorCallback = jest.fn();
-    const note = createNote(url,(await load(url, errorCallback))[0]);
+    const note = createNote(url, (await load(url, errorCallback))[0]);
     expect(errorCallback).toHaveBeenCalledTimes(1);
     expect(errorCallback.mock.calls[0][0]).toEqual([{
-      url: url,
-      reason: notFoundReason
+      url,
+      reason: notFoundReason,
     }]);
     expect(note).toBeNull();
   });
-
  });

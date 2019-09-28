@@ -1,0 +1,10 @@
+.search-input {
+  &_backspace {
+    pointer-events: all !important;
+    cursor: pointer;
+
+    &:hover {
+      color: $link !important;
+    }
+  }
+}

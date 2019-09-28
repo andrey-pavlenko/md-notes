@@ -1,5 +1,4 @@
-import { Trie } from './trie';
-
+/* eslint-disable */
 const stopWordsRu = ['а',
   'алло',
   'без',

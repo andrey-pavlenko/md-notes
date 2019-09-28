@@ -1,4 +1,6 @@
-.icon.is-small {
-  height: 1rem !important;
-  width: 1rem !important;
+.icon {
+  svg {
+    max-height: 1em;
+    max-width: 1em;
+  }
 }

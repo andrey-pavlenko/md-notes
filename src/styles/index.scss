@@ -16,6 +16,6 @@ $navbar-breakpoint: $tablet !default;
 @import "./icon";
 @import "./common";
 @import "./markdown";
-@import "../components/tags/md_tags";
 @import "../components/img-preview";
 @import "../views/note";
+@import "../components/search-input";

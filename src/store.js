@@ -5,7 +5,8 @@ import {
   createNote,
   createContents,
   createTags,
-  notesByTag
+  notesByTag,
+  sentencenize
 } from './modules/note';
 import { toHtml, setOptions as setMarkedOptions } from './modules/marked';
 
@@ -65,7 +66,8 @@ const store = new Vuex.Store({
         const errorCallback = errors => console.info('Show error', errors);
         const notes = (await load(files, errorCallback))
           .map((text, idx) => createNote(files[idx], text))
-          .filter(note => !!note);
+          .filter(note => !!note)
+          .map(note => sentencenize(note));
         const contents = await createContents(notes, errorCallback);
         commit('updateNotes', notes.filter(note => !!note));
         commit('updateContents', contents);
