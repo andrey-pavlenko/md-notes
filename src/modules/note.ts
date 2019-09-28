@@ -186,7 +186,8 @@ function searchNotes(notes: Note[], pattern: string): SearchNotesResult[] {
           results,
         } : null;
       })
-      .filter((result) => !result)
+      .filter((result) => !!result)
+      .sort((a, b) => b.weigth - a.weigth)
    : [];
 }
 

@@ -1,0 +1,8 @@
+.found-text {
+  mark {
+    background-color: lighten($color: $yellow, $amount: 10);
+    border: 1px solid darken($color: $yellow, $amount: 10);
+    border-radius: $radius;
+    padding: 0.15em 0.3em;
+  }
+}

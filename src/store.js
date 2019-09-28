@@ -6,8 +6,10 @@ import {
   createContents,
   createTags,
   notesByTag,
-  sentencenize
+  sentencenize,
+  searchNotes
 } from './modules/note';
+import { stem } from './modules/stem-ru';
 import { toHtml, setOptions as setMarkedOptions } from './modules/marked';
 
 Vue.use(Vuex);
@@ -32,7 +34,11 @@ const store = new Vuex.Store({
         }
         return false;
       }),
-    notesByTag: state => tag => notesByTag(state.notes, tag)
+    notesByTag: state => tag => notesByTag(state.notes, tag),
+    notesBySearchPattern: state => pattern => {
+      let stemmedPattern = stem(pattern) || pattern;
+      return searchNotes(state.notes, stemmedPattern);
+    }
   },
   mutations: {
     updateNotes(state, notes) {
