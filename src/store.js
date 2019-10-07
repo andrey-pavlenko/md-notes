@@ -14,7 +14,8 @@ import { toHtml, setOptions as setMarkedOptions } from './modules/marked';
 
 Vue.use(Vuex);
 
-const INIT_URL = 'notes/contents.json';
+const INIT_URL = 'https://dofuri-proxy.herokuapp.com/notes';
+// const INIT_URL = '//localhost:5000/notes';
 
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
