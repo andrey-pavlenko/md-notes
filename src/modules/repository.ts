@@ -24,7 +24,7 @@ function baseUrl(): string {
  */
 async function init(url: string): Promise<string[]> {
   const response = await axios.get(url, {
-    timeout: REQUEST_TIMEOUT
+    timeout: REQUEST_TIMEOUT * 2
   });
   _contentsUrl = url;
   let baseUrl = response.data.base || '';
