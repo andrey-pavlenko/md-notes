@@ -30,11 +30,11 @@ export default new Router({
         import(/* webpackChunkName: "search" */ '@/views/search.vue')
     },
     {
-      path: '/:url',
+      path: '/*',
       name: 'note',
       component: () =>
         import(/* webpackChunkName: "note" */ '@/views/note.vue'),
-      props: true
+      props: (route) => ({url: route.params.pathMatch})
     }
     // ,
     // {
