@@ -1,5 +1,5 @@
-const CopyPlugin = require('copy-webpack-plugin');
-const path = require('path');
+// const CopyPlugin = require('copy-webpack-plugin');
+// const path = require('path');
 
 module.exports = {
   publicPath: './',
@@ -28,15 +28,16 @@ module.exports = {
           ]
         }
       ]
-    },
-    plugins: [
-      new CopyPlugin([
-        {
-          from: path.resolve(__dirname, 'src/notes'),
-          to: path.resolve(__dirname, 'dist/notes')
-        }
-      ])
-    ]
+    }
+    //,
+    // plugins: [
+    //   new CopyPlugin([
+    //     {
+    //       from: path.resolve(__dirname, 'src/notes'),
+    //       to: path.resolve(__dirname, 'dist/notes')
+    //     }
+    //   ])
+    // ]
   },
   productionSourceMap: false
 };
