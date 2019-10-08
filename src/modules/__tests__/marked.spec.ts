@@ -1,4 +1,4 @@
-import { toHtml, toText } from '../marked';
+import { toHtml, toText } from '../marked/index';
 
 describe('Marked', () => {
   it('code', () => {

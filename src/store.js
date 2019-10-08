@@ -10,12 +10,14 @@ import {
   searchNotes
 } from './modules/note';
 import { stem } from './modules/stem-ru';
-import { toHtml, setOptions as setMarkedOptions } from './modules/marked';
+import { toHtml, setOptions as setMarkedOptions } from './modules/marked/index';
 
 Vue.use(Vuex);
 
-const INIT_URL = 'https://dofuri-proxy.herokuapp.com/notes';
-// const INIT_URL = '//localhost:5000/notes';
+const INIT_URL =
+  process && process.env && process.env.NODE_ENV === 'production'
+    ? 'https://dofuri-proxy.herokuapp.com/notes'
+    : 'notes/contents.json';
 
 const store = new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',

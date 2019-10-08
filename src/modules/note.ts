@@ -16,7 +16,7 @@ import {
   stopWordsEn,
   removeStopWords,
 } from './search';
-import { toText } from './marked';
+import { toText } from './marked/index';
 import { Trie, weigth as matchWeight } from './trie';
 
 const stopWords = [].concat(stopWordsEn, stopWordsRu);

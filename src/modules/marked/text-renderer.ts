@@ -1,9 +1,4 @@
-/* eslint-disable */
 import * as marked from 'marked';
-
-function toHtml(mdContent: string): string {
-  return marked(mdContent);
-}
 
 class PlainTextRenderer extends marked.Renderer {
   public code(code: string): string {
@@ -75,14 +70,4 @@ class PlainTextRenderer extends marked.Renderer {
   }
 }
 
-function toText(mdContent: string): string {
-  return marked(mdContent, {
-    renderer: new PlainTextRenderer(),
-  });
-}
-
-function setOptions(ops: marked.MarkedOptions): void {
-  marked.setOptions(ops);
-}
-
-export { toHtml, toText, setOptions };
+export { PlainTextRenderer };
