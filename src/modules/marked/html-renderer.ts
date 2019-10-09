@@ -4,7 +4,7 @@ import { default as store } from '../../store.js';
 class HtmlRenderer extends marked.Renderer {
   public link(href: string, title: string, text: string): string {
     if (!!store.getters.noteByUrl(href)) {
-      return `<a href="/#/${href}">${text}</a>`;
+      return `<a href="#/${href}">${text}</a>`;
     } else {
       return super.link(href, title, text);
     }
