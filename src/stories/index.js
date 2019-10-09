@@ -5,3 +5,4 @@ import './tag-story';
 import './icons';
 import './img-preview-story';
 import './search-input';
+import './notification';

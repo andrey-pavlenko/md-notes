@@ -1,5 +1,6 @@
 <template lang="pug">
 #app
+  Notification
   Navbar
   router-view.container#router-view
 </template>
@@ -7,10 +8,12 @@
 <script>
 import store from './store';
 import Navbar from '@/components/navbar';
+import Notification from '@/components/notification/index'
 
 export default {
   components: {
-    Navbar
+    Navbar,
+    Notification
   },
   created() {
     store.dispatch('init');

@@ -11,6 +11,7 @@ import {
 } from './modules/note';
 import { stem } from './modules/stem-ru';
 import { toHtml, setOptions as setMarkedOptions } from './modules/marked/index';
+import { notify, DELAY_ERROR } from '@/components/notification/index';
 
 Vue.use(Vuex);
 
@@ -72,7 +73,24 @@ const store = new Vuex.Store({
       try {
         const files = await init(INIT_URL);
         setMarkedOptions({ baseUrl: baseUrl() });
-        const errorCallback = errors => console.info('Show error', errors);
+        const errorCallback = errors => {
+          const errs = errors.map(error => {
+            let message = 'Неизвестная ошибка';
+            if (error.reason && error.reason.statusText) {
+              if (error.reason && error.reason.status) { 
+                message = error.reason.status.toString() + ' ';
+              }
+              message += error.reason.statusText;
+            }
+            return `<li><strong>${error.url}</strong> &ndash; <small>${message}</small></li>`;
+          })
+          notify({
+            header: 'Ошибки чтения файлов:',
+            message: '<ul>' + errs.join('') + '</ul>',
+            style: 'danger',
+            timeout: DELAY_ERROR
+          });
+        };
         const notes = (await load(files, errorCallback))
           .map((text, idx) => createNote(files[idx], text))
           .filter(note => !!note)
@@ -82,7 +100,12 @@ const store = new Vuex.Store({
         commit('updateContents', contents);
         commit('updateTags', createTags(notes));
       } catch (e) {
-        console.error(e);
+        notify({
+          header: 'Ошибка загрузки содержания:',
+          message: e.toString(),
+          style: 'danger',
+          timeout: DELAY_ERROR,
+        });
       }
       commit('updateProcessing', false);
     },
@@ -90,7 +113,11 @@ const store = new Vuex.Store({
       const note = getters.noteByUrl(url);
       if (!note) {
         const error = `Файл ${url} не найден`;
-        console.error(error);
+        notify({
+          message: error,
+          style: 'danger',
+          timeout: DELAY_ERROR,
+        });
         throw error;
       }
       if (!note.html) {
