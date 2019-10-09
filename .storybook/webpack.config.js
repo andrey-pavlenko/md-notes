@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = async ({ config, mode }) => {
   config.resolve.extensions.push('.ts', 'tsx');
+  config.resolve.alias['@'] = path.resolve(__dirname, '../src');
   config.module.rules = [
     ...config.module.rules,
     {
