@@ -1,19 +1,11 @@
-import Vue from 'vue';
-import App from './app.vue';
-import router from './router';
-import store from './store';
-import AsyncComputed from 'vue-async-computed';
-import './styles/index.scss';
-import './styles/icons/icons.svg';
+import './styles/style.scss';
+import Application from './components/Application.svelte';
+// import { initRemoteRepository } from './store';
 
-Vue.config.productionTip = false;
+// initRemoteRepository();
 
-Vue.use(AsyncComputed);
+const app = new Application({
+  target: document.body
+});
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app');
-
-// store.dispatch('fetchContents');
+export default app;

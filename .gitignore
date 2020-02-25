@@ -19,3 +19,14 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+arch.sh
+tar.exclude
+application.md
+
+public/bundle.css.map
+public/bundle.js.map
+public/bundle.css
+public/bundle.js
+public/bulma.css
+public/notes

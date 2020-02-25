@@ -1,0 +1,22 @@
+{
+  "base": "http://localhost:8080/notes-dev/",
+  "files": [
+    "00-notes-format.md",
+    "android-avd.md",
+    "android-dev.md",
+    "archlinux.md",
+    "email-html.md",
+    "git.md",
+    "heroku.md",
+    "hosts.md",
+    "javascript.md",
+    "jest.md",
+    "npm.md",
+    "secret.md",
+    "typescript.md",
+    "virtualbox.md",
+    "vue.md",
+    "windows-media-autostart.md",
+    "вода.md"
+  ]
+}
