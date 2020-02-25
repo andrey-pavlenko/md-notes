@@ -5,6 +5,16 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
+import Pako from 'pako';
+import { readFileSync } from 'fs';
+
+function compressHelp() {
+  const helpMarkdownPath = './src/components/help/help.md';
+  const help = readFileSync(helpMarkdownPath);
+  const uint8 = Pako.deflate(help);
+  // eslint-disable-next-line no-undef
+  return Buffer.from(uint8, 'binary').toString('base64');
+}
 
 // eslint-disable-next-line no-undef
 const production = process.env.NODE_ENV === 'production';
@@ -64,7 +74,8 @@ export default {
     production && terser(),
     replace({
       exclude: 'node_modules/**',
-      'env.__options_contentsUrl__': env.__options_contentsUrl__
+      'env.__options_contentsUrl__': env.__options_contentsUrl__,
+      __help_md__: compressHelp()
     }),
     postcss({
       extract: true,

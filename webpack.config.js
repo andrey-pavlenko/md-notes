@@ -2,8 +2,20 @@
 const path = require('path');
 // eslint-disable-next-line no-undef
 const { HotModuleReplacementPlugin } = require('webpack');
+const Pako = require('pako');
+const { readFileSync } = require('fs');
+
+function compressHelp() {
+  const helpMarkdownPath = './src/components/help/help.md';
+  const help = readFileSync(helpMarkdownPath);
+  const uint8 = Pako.deflate(help);
+  // eslint-disable-next-line no-undef
+  return Buffer.from(uint8, 'binary').toString('base64');
+}
 
 const env = require('./env.development.json');
+const helpMd = compressHelp();
+console.info(helpMd);
 
 // eslint-disable-next-line no-undef
 module.exports = {
@@ -31,6 +43,14 @@ module.exports = {
         options: {
           search: 'env.__options_contentsUrl__',
           replace: env.__options_contentsUrl__
+        }
+      },
+      {
+        test: /Help\.svelte$/,
+        loader: 'string-replace-loader',
+        options: {
+          search: '__help_md__',
+          replace: helpMd
         }
       },
       {

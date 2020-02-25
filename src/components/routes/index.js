@@ -1,4 +1,4 @@
-import Help from './Help.svelte';
+import Help from '../help/Help.svelte';
 import Toc from '../toc/Toc.svelte';
 import Note from '../Note.svelte';
 import Search from './Search.svelte';
