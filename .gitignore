@@ -24,6 +24,7 @@ arch.sh
 tar.exclude
 application.md
 
+coverage
 public/bundle.css.map
 public/bundle.js.map
 public/bundle.css

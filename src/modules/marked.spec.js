@@ -158,6 +158,11 @@ describe('Marked', () => {
     ).toEqual(
       '<p><a href="https://google.com/other.md" target="_blank">Remote note</a></p>\n'
     );
+    expect(
+      toHtml('[Remote note](https://google.com/other.md "Google")')
+    ).toEqual(
+      '<p><a href="https://google.com/other.md" title="Google" target="_blank">Remote note</a></p>\n'
+    );
   });
 
   it('image inside note', () => {

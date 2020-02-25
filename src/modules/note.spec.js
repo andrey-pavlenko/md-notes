@@ -161,4 +161,25 @@ describe('Note', () => {
     expect(note.etag).toBeUndefined();
     expect(note.isRootTocItem).not.toBeTruthy();
   });
+
+  it('get HTML, check cache', () => {
+    const note = new Note({
+      url: 'https://store.com/notes/test.md',
+      path: 'test.md',
+      content: makeNoteContent(null, 'Content')
+    });
+    expect(note.html).toEqual('<p>Content</p>\n');
+    note.content = 'Test';
+    expect(note.html).toEqual('<p>Content</p>\n');
+  });
+
+  it('get HTML from error note', () => {
+    const info = {
+      url: 'https://store.com/notes/test.md',
+      path: 'test.md',
+      error: '404: Not found'
+    };
+    const note = new Note(info);
+    expect(note.html).toEqual('');
+  });
 });
