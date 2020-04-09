@@ -8,9 +8,18 @@
   let markdownElement = undefined;
   let zoomImageSrc = undefined;
   let zoomImageAlt = undefined;
+  let relatedNotes = undefined;
 
   $: (function(assets, location) {
       note = assets.findNote('path', decodeURI(location).replace(/^[/.]*/, ''));
+      console.info(note.tags);
+      console.info(note.related);
+      console.info(assets);
+      if (note.related != null) {
+        relatedNotes = note.related
+          .map(relatePath => assets.findNote('path', relatePath))
+          .filter(note => note != null);
+      }
     })($assets, $location);
   
   function zoomImage() {
@@ -67,7 +76,19 @@
   zoomImageSrc = undefined;
 }}" />
 {#if note != null}
-<div class="content markdown" use:noteCreated>{@html note.html}</div>
+<div class="columns">
+  <div class="column content markdown" class:is-four-fifths="{relatedNotes != null}" use:noteCreated>{@html note.html}</div>
+  {#if relatedNotes != null}
+  <div class="column">
+    <div class="is-size-7">Связанные темы:</div>
+    <ul>
+      {#each relatedNotes as relateNote (relateNote.path)}
+      <li><a href="#/{relateNote.path}">{relateNote.title}</a></li>
+      {/each}
+    </ul>
+  </div>
+  {/if}
+</div>
 {:else}
 <div>Not found</div>
 {/if}

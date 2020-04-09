@@ -22,7 +22,61 @@ Some text
     });
   });
 
-  it('children, releted are not array', () => {
+  it('related relative path', () => {
+    let note = `<!---
+{
+  "title": "Simple note",
+  "tags":["simlpe", "note"],
+  "related": "./test.md"
+}
+-->
+# Simple note, with meta.title
+
+Some text
+    `;
+    expect(getNoteMeta(note)).toEqual({
+      title: 'Simple note',
+      tags: ['simlpe', 'note'],
+      related: ['test.md']
+    });
+    note = `<!---
+{
+  "title": "Simple note",
+  "tags":["simlpe", "note"],
+  "related": ["./test.md", "../test-1.md", ".test-2.md"]
+}
+-->
+# Simple note, with meta.title
+
+Some text
+    `;
+    expect(getNoteMeta(note)).toEqual({
+      title: 'Simple note',
+      tags: ['simlpe', 'note'],
+      related: ['test.md', 'test-1.md', '.test-2.md']
+    });
+  });
+
+  it('unique related', () => {
+    const note = `<!---
+{
+  "title": "Simple note",
+  "tags":["simlpe", "note"],
+  "related": ["./test.md", "../test.md", "..//test.md"]
+}
+-->
+# Simple note, with meta.title
+
+Some text
+    `;
+    expect(getNoteMeta(note)).toEqual({
+      title: 'Simple note',
+      tags: ['simlpe', 'note'],
+      related: ['test.md']
+    });
+  });
+
+  it('children, related are not array', () => {
     const note = `<!---
 {
   "title": "Simple note",
@@ -39,6 +93,66 @@ Some text
       title: 'Simple note',
       tags: ['simlpe'],
       children: ['sub/note-1.md'],
+      related: ['test.md']
+    });
+  });
+
+  it('children relative path', () => {
+    let note = `<!---
+{
+  "title": "Simple note",
+  "tags":["simlpe", "note"],
+  "children": "./sub/note.md",
+  "related": ["test.md"]
+}
+-->
+# Simple note, with meta.title
+
+Some text
+    `;
+    expect(getNoteMeta(note)).toEqual({
+      title: 'Simple note',
+      tags: ['simlpe', 'note'],
+      children: ['sub/note.md'],
+      related: ['test.md']
+    });
+    note = `<!---
+{
+  "title": "Simple note",
+  "tags":["simlpe", "note"],
+  "children": ["./sub/note-1.md", "./sub/note-2.md"],
+  "related": ["test.md"]
+}
+-->
+# Simple note, with meta.title
+
+Some text
+    `;
+    expect(getNoteMeta(note)).toEqual({
+      title: 'Simple note',
+      tags: ['simlpe', 'note'],
+      children: ['sub/note-1.md', 'sub/note-2.md'],
+      related: ['test.md']
+    });
+  });
+
+  it('unique children', () => {
+    const note = `<!---
+{
+  "title": "Simple note",
+  "tags":["simlpe", "note"],
+  "children": ["./sub/note.md", "../sub/note.md"],
+  "related": ["test.md"]
+}
+-->
+# Simple note, with meta.title
+
+Some text
+    `;
+    expect(getNoteMeta(note)).toEqual({
+      title: 'Simple note',
+      tags: ['simlpe', 'note'],
+      children: ['sub/note.md'],
       related: ['test.md']
     });
   });
@@ -115,7 +229,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     });
   });
 
-  it('no meta inside content', () => { 
+  it('no meta inside content', () => {
     const note = `Arch Linux (Русский)
 ====================
 

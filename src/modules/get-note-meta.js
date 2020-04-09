@@ -30,6 +30,10 @@ function getNoteMeta(text, defaultMeta) {
     }
   }
 
+  function normailzeRelativePath(path) {
+    return path.replace(/^\.+\/+/, '');
+  }
+
   /** @type {NoteMeta} */
   const meta = Object.assign({}, defaultMeta);
   if (typeof text === 'string') {
@@ -48,14 +52,18 @@ function getNoteMeta(text, defaultMeta) {
       meta.tags = [tags];
     }
     if (Array.isArray(children)) {
-      meta.children = children;
+      meta.children = Array.from(
+        new Set(children.map(normailzeRelativePath))
+      );
     } else if (typeof children === 'string') {
-      meta.children = [children];
+      meta.children = [normailzeRelativePath(children)];
     }
     if (Array.isArray(related)) {
-      meta.related = related;
+      meta.related = Array.from(
+        new Set(related.map(normailzeRelativePath))
+      );
     } else if (typeof related === 'string') {
-      meta.related = [related];
+      meta.related = [normailzeRelativePath(related)];
     }
   }
   return meta;

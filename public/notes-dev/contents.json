@@ -1,5 +1,5 @@
 {
-  "base": "http://localhost:8080/notes-dev/",
+  "base": "http://localhost:8080/notes-dev/md-notes",
   "files": [
     "00-notes-format.md",
     "android-avd.md",
