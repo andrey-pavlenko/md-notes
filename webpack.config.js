@@ -15,25 +15,25 @@ function compressHelp() {
 
 const env = require('./env.development.json');
 const helpMd = compressHelp();
-console.info(helpMd);
+// console.info(helpMd);
 
 // eslint-disable-next-line no-undef
 module.exports = {
   entry: {
-    bundle: ['./src/main.js']
+    bundle: ['./src/main.js'],
   },
   resolve: {
     alias: {
-      svelte: path.resolve('node_modules', 'svelte')
+      svelte: path.resolve('node_modules', 'svelte'),
     },
     extensions: ['.mjs', '.js', '.svelte'],
-    mainFields: ['svelte', 'browser', 'module', 'main']
+    mainFields: ['svelte', 'browser', 'module', 'main'],
   },
   output: {
     // eslint-disable-next-line no-undef
     path: __dirname + '/public',
     filename: '[name].js',
-    chunkFilename: '[name].[id].js'
+    chunkFilename: '[name].[id].js',
   },
   module: {
     rules: [
@@ -42,16 +42,16 @@ module.exports = {
         loader: 'string-replace-loader',
         options: {
           search: 'env.__options_contentsUrl__',
-          replace: env.__options_contentsUrl__
-        }
+          replace: env.__options_contentsUrl__,
+        },
       },
       {
         test: /Help\.svelte$/,
         loader: 'string-replace-loader',
         options: {
           search: '__help_md__',
-          replace: helpMd
-        }
+          replace: helpMd,
+        },
       },
       {
         test: /\.svelte$/,
@@ -63,20 +63,20 @@ module.exports = {
             hotReload: true,
             hotOptions: {
               noPreserveState: false,
-              optimistic: true
-            }
-          }
-        }
+              optimistic: true,
+            },
+          },
+        },
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      }
-    ]
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+    ],
   },
   mode: 'development',
   devtool: 'source-map',
@@ -89,7 +89,7 @@ module.exports = {
     historyApiFallback: true,
     overlay: true,
     inline: true,
-    index: 'index.html'
+    index: 'index.html',
   },
-  plugins: [new HotModuleReplacementPlugin()]
+  plugins: [new HotModuleReplacementPlugin()],
 };

@@ -49,7 +49,7 @@
           img.onload = event => {
             updateImgZoomer(event.target);
             event.target.onload = null;
-          }
+          };
         }
       });
     }

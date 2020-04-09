@@ -28,7 +28,7 @@
         }
         document.removeEventListener('click', closeMenu);
         document.removeEventListener('keydown', closeMenu);
-      };
+      }
 
       if (event.type === 'click') {
         close();
