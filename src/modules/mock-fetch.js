@@ -18,6 +18,7 @@ function fetchCallback(url) {
 function mockFecth() {
   if (mockedFecth == null) {
     mockedFecth = jest.fn(fetchCallback);
+    // @ts-ignore
     // eslint-disable-next-line no-undef
     global.fetch = mockedFecth;
     return mockedFecth;
@@ -29,6 +30,7 @@ function mockFecth() {
 function unmockFecth() {
   if (mockFecth != null) {
     mockedFecth = undefined;
+    // @ts-ignore
     // eslint-disable-next-line no-undef
     delete global.fetch;
   } else {

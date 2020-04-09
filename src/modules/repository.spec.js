@@ -31,7 +31,9 @@ describe('Repository', () => {
   it('bad param in constructor', () => {
     expect(Array.isArray(new Repository()._notes)).toBeTruthy();
     expect(new Repository()._notes).toEqual([]);
+    // @ts-ignore
     expect(Array.isArray(new Repository(10)._notes)).toBeTruthy();
+    // @ts-ignore
     expect(new Repository(10)._notes).toEqual([]);
   });
 
@@ -157,7 +159,7 @@ describe('Repository', () => {
 
   it('merge: unique repositories, add', () => {
     let notes = Array(10)
-      .fill()
+      .fill(undefined)
       .map(
         (_, index) =>
           new Note({
@@ -165,7 +167,6 @@ describe('Repository', () => {
               index
             ).padStart(2, '0')}.md`,
             path: `note-${String(index).padStart(2, '0')}.md`,
-            etag: (10001 + index).toString(),
             content: makeNoteContent({
               title: `Note ${index + 1}`
             })
@@ -174,7 +175,7 @@ describe('Repository', () => {
     let repo = new Repository(notes);
     const otherRepo = new Repository(
       Array(5)
-        .fill()
+        .fill(undefined)
         .map(
           (_, index) =>
             new Note({
@@ -182,7 +183,6 @@ describe('Repository', () => {
                 index + 10
               ).padStart(2, '0')}.md`,
               path: `note-${String(index + 10).padStart(2, '0')}.md`,
-              etag: (10011 + index).toString(),
               content: makeNoteContent({
                 title: `Note ${index + 11}`
               })
@@ -200,7 +200,7 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10001 + index).toString());
+      // expect(note.etag).toEqual((10001 + index).toString());
       expect(note.title).toEqual(`Note ${index + 1}`);
     });
     repo.merge(otherRepo);
@@ -215,14 +215,14 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10001 + index).toString());
+      // expect(note.etag).toEqual((10001 + index).toString());
       expect(note.title).toEqual(`Note ${index + 1}`);
     });
   });
 
   it('merge: not unique repositories, overwrite', () => {
     let notes = Array(10)
-      .fill()
+      .fill(undefined)
       .map(
         (_, index) =>
           new Note({
@@ -230,7 +230,6 @@ describe('Repository', () => {
               index
             ).padStart(2, '0')}.md`,
             path: `note-${String(index).padStart(2, '0')}.md`,
-            etag: (10001 + index).toString(),
             content: makeNoteContent({
               title: `Note ${index + 1}`
             })
@@ -239,7 +238,7 @@ describe('Repository', () => {
     let repo = new Repository(notes);
     let otherRepo = new Repository(
       Array(4)
-        .fill()
+        .fill(undefined)
         .map(
           (_, index) =>
             new Note({
@@ -247,7 +246,6 @@ describe('Repository', () => {
                 index
               ).padStart(2, '0')}.md`,
               path: `note-${String(index).padStart(2, '0')}.md`,
-              etag: (10011 + index).toString(),
               content: makeNoteContent({
                 title: `Note ${index + 10}`
               })
@@ -264,7 +262,6 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10001 + index).toString());
       expect(note.title).toEqual(`Note ${index + 1}`);
     });
     repo.merge(otherRepo);
@@ -279,8 +276,7 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10011 + index).toString());
-      expect(note.title).toEqual(`Note ${index + 10}`);
+      expect(note.title).toEqual(`Note ${index + 1}`);
     });
     repo._notes.slice(4).forEach((note, index) => {
       expect(note.url).toEqual(
@@ -292,12 +288,11 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index + 4).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10005 + index).toString());
       expect(note.title).toEqual(`Note ${index + 5}`);
     });
     otherRepo = new Repository(
       Array(2)
-        .fill()
+        .fill(undefined)
         .map(
           (_, index) =>
             new Note({
@@ -305,7 +300,6 @@ describe('Repository', () => {
                 index + 4
               ).padStart(2, '0')}.md`,
               path: `note-${String(index + 4).padStart(2, '0')}.md`,
-              etag: (10015 + index).toString(),
               content: makeNoteContent({
                 title: `Note ${index + 14}`
               })
@@ -324,12 +318,11 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10011 + index).toString());
-      expect(note.title).toEqual(`Note ${index + 10}`);
+      expect(note.title).toEqual(`Note ${index + 1}`);
     });
     otherRepo = new Repository(
       Array(4)
-        .fill()
+        .fill(undefined)
         .map(
           (_, index) =>
             new Note({
@@ -337,7 +330,6 @@ describe('Repository', () => {
                 index + 6
               ).padStart(2, '0')}.md`,
               path: `note-${String(index + 6).padStart(2, '0')}.md`,
-              etag: (10017 + index).toString(),
               content: makeNoteContent({
                 title: `Note ${index + 16}`
               })
@@ -356,14 +348,13 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10011 + index).toString());
-      expect(note.title).toEqual(`Note ${index + 10}`);
+      expect(note.title).toEqual(`Note ${index + 1}`);
     });
   });
 
   it('merge: skip without etag', () => {
     let notes = Array(3)
-      .fill()
+      .fill(undefined)
       .map(
         (_, index) =>
           new Note({
@@ -371,7 +362,6 @@ describe('Repository', () => {
               index
             ).padStart(2, '0')}.md`,
             path: `note-${String(index).padStart(2, '0')}.md`,
-            etag: (10001 + index).toString(),
             content: makeNoteContent({
               title: `Note ${index + 1}`
             })
@@ -388,14 +378,12 @@ describe('Repository', () => {
       expect(note.path).toEqual(
         `note-${String(index).padStart(2, '0')}.md`
       );
-      expect(note.etag).toEqual((10001 + index).toString());
       expect(note.title).toEqual(`Note ${index + 1}`);
     });
     let otherRepo = new Repository([
       new Note({
         url: 'https://repo.com/notes/note-00.md',
         path: 'note-00.md',
-        etag: '11111',
         content: makeNoteContent({
           title: 'Note 10'
         })
@@ -408,7 +396,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/notes/note-02.md',
         path: 'note-02.md',
-        etag: '22222',
         content: makeNoteContent({
           title: 'Note 12'
         })
@@ -419,36 +406,30 @@ describe('Repository', () => {
       'https://repo.com/notes/note-00.md'
     );
     expect(repo._notes[0].path).toEqual('note-00.md');
-    expect(repo._notes[0].etag).toEqual('11111');
-    expect(repo._notes[0].title).toEqual('Note 10');
+    expect(repo._notes[0].title).toEqual('Note 1');
     expect(repo._notes[1].url).toEqual(
       'https://repo.com/notes/note-01.md'
     );
     expect(repo._notes[1].path).toEqual('note-01.md');
-    expect(repo._notes[1].etag).toEqual('10002');
     expect(repo._notes[1].title).toEqual('Note 2');
     expect(repo._notes[2].url).toEqual(
       'https://repo.com/notes/note-02.md'
     );
     expect(repo._notes[2].path).toEqual('note-02.md');
-    expect(repo._notes[2].etag).toEqual('22222');
-    expect(repo._notes[2].title).toEqual('Note 12');
+    expect(repo._notes[2].title).toEqual('Note 3');
     repo.merge(otherRepo);
     expect(repo._notes[0].path).toEqual('note-00.md');
-    expect(repo._notes[0].etag).toEqual('11111');
-    expect(repo._notes[0].title).toEqual('Note 10');
+    expect(repo._notes[0].title).toEqual('Note 1');
     expect(repo._notes[1].url).toEqual(
       'https://repo.com/notes/note-01.md'
     );
     expect(repo._notes[1].path).toEqual('note-01.md');
-    expect(repo._notes[1].etag).toEqual('10002');
     expect(repo._notes[1].title).toEqual('Note 2');
     expect(repo._notes[2].url).toEqual(
       'https://repo.com/notes/note-02.md'
     );
     expect(repo._notes[2].path).toEqual('note-02.md');
-    expect(repo._notes[2].etag).toEqual('22222');
-    expect(repo._notes[2].title).toEqual('Note 12');
+    expect(repo._notes[2].title).toEqual('Note 3');
   });
 
   it('tags: normal', () => {
@@ -456,7 +437,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         content: makeNoteContent({
           tags: ['one1', 'many1']
         })
@@ -464,7 +444,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note2.md',
         path: 'note2.md',
-        etag: '112',
         content: makeNoteContent({
           tags: ['one2', 'many1']
         })
@@ -472,7 +451,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note3.md',
-        etag: '113',
         content: makeNoteContent({
           tags: ['one3', 'many1']
         })
@@ -480,7 +458,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note4.md',
-        etag: '114',
         content: makeNoteContent({
           tags: 'one4'
         })
@@ -501,7 +478,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         content: makeNoteContent({
           tags: ['one1', 'many1']
         })
@@ -514,7 +490,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note3.md',
-        etag: '113',
         content: makeNoteContent({
           related: ['related1.md', 'related2.md']
         })
@@ -522,7 +497,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note4.md',
-        etag: '114',
         content: makeNoteContent({
           tags: 'one4'
         })
@@ -551,7 +525,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note3.md',
-        etag: '113',
         content: makeNoteContent({
           related: ['related1.md', 'related2.md']
         })
@@ -559,7 +532,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note4.md',
-        etag: '114',
         content: makeNoteContent({
           children: 'child.md'
         })
@@ -575,7 +547,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 1',
@@ -585,7 +556,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note2.md',
         path: 'note2.md',
-        etag: '112',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 2',
@@ -595,7 +565,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note3.md',
-        etag: '113',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 3',
@@ -605,7 +574,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note4.md',
         path: 'note4.md',
-        etag: '114',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 4'
@@ -616,7 +584,6 @@ describe('Repository', () => {
           new Note({
             url: `https://repo.com/children/child${num}.md`,
             path: `children/child${num}.md`,
-            etag: (114 + num).toString(),
             content: makeNoteContent({
               title: `Child ${num}`
             })
@@ -648,7 +615,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 1',
@@ -658,7 +624,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note2.md',
         path: 'note2.md',
-        etag: '112',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 2',
@@ -668,7 +633,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note3.md',
         path: 'note3.md',
-        etag: '113',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 3',
@@ -686,7 +650,6 @@ describe('Repository', () => {
           new Note({
             url: `https://repo.com/children/child${num}.md`,
             path: `children/child${num}.md`,
-            etag: (114 + num).toString(),
             content: makeNoteContent({
               title: `Child ${num}`
             })
@@ -716,7 +679,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 1',
@@ -726,7 +688,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/children/child1.md',
         path: 'children/child1.md',
-        etag: '112',
         content: makeNoteContent({
           title: 'Child 1',
           children: [
@@ -738,7 +699,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/children/sub/subchild1.md',
         path: 'children/sub/subchild1.md',
-        etag: '113',
         content: makeNoteContent({
           title: 'Subchild 1',
           children: 'children/sub/sub-subchild1.md'
@@ -747,7 +707,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/children/sub/subchild2.md',
         path: 'children/sub/subchild2.md',
-        etag: '114',
         content: makeNoteContent({
           title: 'Subchild 2'
         })
@@ -755,7 +714,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/children/sub/sub-subchild1.md',
         path: 'children/sub/sub-subchild1.md',
-        etag: '115',
         content: makeNoteContent({
           title: 'Sub-Subchild 1'
         })
@@ -789,7 +747,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 1',
@@ -809,7 +766,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 1',
@@ -819,7 +775,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/child1.md',
         path: 'child1.md',
-        etag: '112',
         content: makeNoteContent({
           title: 'Child 1',
           children: 'note1.md'
@@ -840,7 +795,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/note1.md',
         path: 'note1.md',
-        etag: '111',
         isRootTocItem: true,
         content: makeNoteContent({
           title: 'Note 1',
@@ -850,7 +804,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/child1.md',
         path: 'child1.md',
-        etag: '112',
         content: makeNoteContent({
           title: 'Child 1',
           children: 'subchild1.md'
@@ -859,7 +812,6 @@ describe('Repository', () => {
       new Note({
         url: 'https://repo.com/subchild1.md',
         path: 'subchild1.md',
-        etag: '113',
         content: makeNoteContent({
           title: 'Subchild 1',
           children: 'note1.md'

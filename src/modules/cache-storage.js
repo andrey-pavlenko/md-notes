@@ -19,11 +19,7 @@ function decompress(str) {
 }
 
 /**
- * @type {import('./_types').CacheNote}
- */
-
-/**
- * @returns {CacheNote[]}
+ * @returns {import('./_types.d').CacheNote[]}
  */
 function readNotes() {
   const cachedNotes = localStorage.getItem(localStorageKey);
@@ -38,7 +34,7 @@ function readNotes() {
 }
 
 /**
- * @param {CacheNote[]} cacheNotes
+ * @param {import('./_types.d').CacheNote[]} cacheNotes
  */
 function writeNotes(cacheNotes) {
   if (Array.isArray(cacheNotes) && cacheNotes.length) {

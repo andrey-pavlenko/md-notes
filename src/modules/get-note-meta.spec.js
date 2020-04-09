@@ -266,7 +266,7 @@ Content
 
   it('bad content', () => {
     expect(getNoteMeta('')).toEqual({});
-    expect(getNoteMeta()).toEqual({});
+    expect(getNoteMeta(undefined)).toEqual({});
     expect(getNoteMeta(null)).toEqual({});
   });
 
@@ -287,6 +287,7 @@ Simple note, invalid JSON
     expect(getNoteMeta(note, { title: 'test-01.md' })).toEqual({
       title: 'test-01.md'
     });
+    // @ts-ignore
     expect(console.error.mock.calls[0][1]).toEqual(
       expect.stringMatching(/Unexpected token\s*in JSON/)
     );

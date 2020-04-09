@@ -1,21 +1,18 @@
 import Note from './note';
 import { makeNoteContent } from './mock-fetch';
 
-/**
- * @type {import('./_types').NoteInfo}
- * @type {import('./_types').NoteMeta}
- */
-
 describe('Note', () => {
   it('no errors, check title, tags, children, related', () => {
-    /** @type {NoteMeta} */
+    /** @type {import('./_types.d').NoteMeta} */
     const meta = {
       title: 'Simple note',
       tags: ['test', 'note'],
+      // @ts-ignore
       children: 'sub/subnote.md',
+      // @ts-ignore
       related: 'sub/related.md'
     };
-    /** @type {NoteInfo} */
+    /** @type {import('./_types.d').NoteInfo} */
     const info = {
       url: 'https://store.com/notes/test-01.md',
       path: 'test-01.md',
@@ -30,34 +27,33 @@ describe('Note', () => {
   });
 
   it('no errors, no meta', () => {
-    /** @type {NoteInfo} */
+    /** @type {import('./_types.d').NoteInfo} */
     const info = {
       url: 'https://store.com/notes/test-01.md',
       path: 'test-01.md',
-      etag: '11111',
       content: 'Note content',
       isRootTocItem: true
     };
     const note = new Note(info);
     expect(note.title).toEqual('test-01.md');
-    expect(note.tags).toBeUndefined();
     expect(note.children).toBeUndefined();
     expect(note.related).toBeUndefined();
   });
 
   it('has error, should hsa no meta', () => {
-    /** @type {NoteMeta} */
+    /** @type {import('./_types.d').NoteMeta} */
     const meta = {
       title: 'Simple note',
       tags: ['test', 'note'],
+      // @ts-ignore
       children: 'sub/subnote.md',
+      // @ts-ignore
       related: 'sub/related.md'
     };
-    /** @type {NoteInfo} */
+    /** @type {import('./_types.d').NoteInfo} */
     const info = {
       url: 'https://store.com/notes/test-01.md',
       path: 'test-01.md',
-      etag: '11111',
       error: '404: Not found',
       content: makeNoteContent(meta),
       isRootTocItem: true
@@ -65,7 +61,6 @@ describe('Note', () => {
     const note = new Note(info);
     expect(note.error).toEqual('404: Not found');
     expect(note.title).toEqual('test-01.md');
-    expect(note.tags).toBeUndefined();
     expect(note.children).toBeUndefined();
     expect(note.related).toBeUndefined();
   });
@@ -74,7 +69,6 @@ describe('Note', () => {
     const info = {
       url: 'https://store.com/notes/test.md',
       path: 'test.md',
-      etag: '11111',
       content: makeNoteContent({
         title: 'Test note',
         tags: 'test'
@@ -121,7 +115,6 @@ describe('Note', () => {
     expect(note.title).toEqual('Test note');
     expect(note.children).toEqual(['child.md']);
     expect(note.related).toEqual(['related.md']);
-    expect(note.etag).toEqual('11111');
     expect(note.isRootTocItem).toEqual(true);
   });
 
@@ -142,7 +135,6 @@ describe('Note', () => {
     expect(note.title).toEqual('Test note');
     expect(note.children).toEqual(['child.md']);
     expect(note.related).toEqual(['related.md']);
-    expect(note.etag).toEqual('11111');
     expect(note.isRootTocItem).toBeUndefined();
   });
 
@@ -158,7 +150,6 @@ describe('Note', () => {
     expect(note.title).toEqual('test.md');
     expect(note.children).toBeUndefined();
     expect(note.related).toBeUndefined();
-    expect(note.etag).toBeUndefined();
     expect(note.isRootTocItem).not.toBeTruthy();
   });
 

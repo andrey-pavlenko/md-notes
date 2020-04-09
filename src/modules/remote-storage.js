@@ -1,7 +1,7 @@
 import options from '../options';
 
 /**
- * @type {import('./_types').StorageContents}
+ * @typedef {import('./_types.d').StorageContents} StorageContents
  * @returns {Promise<StorageContents>}
  */
 async function loadContents() {
@@ -36,7 +36,7 @@ function resolveFilePath(base, path) {
 }
 
 /**
- * @type {import('./_types').StorageFile}
+ * @typedef {import('./_types.d').StorageFile} StorageFile
  * @param {string} path
  * @returns {Promise<StorageFile>}
  */
@@ -67,7 +67,6 @@ async function loadFile(path) {
 }
 
 /**
- * @type {import('./_types').StorageFile}
  * @param {string | string[]} paths
  * @returns {Promise<StorageFile[]>}
  */

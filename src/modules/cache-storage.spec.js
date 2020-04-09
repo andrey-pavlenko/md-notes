@@ -17,6 +17,7 @@ describe('Cache storage', () => {
     Storage.prototype.removeItem = jest.fn(
       key => delete mockLocalStorage[key]
     );
+    // @ts-ignore
     // eslint-disable-next-line no-undef
     global.TextDecoder = TextDecoder;
   });
@@ -25,6 +26,7 @@ describe('Cache storage', () => {
     Storage.prototype.setItem = localStorageSetItem;
     Storage.prototype.getItem = localStorageGetItem;
     Storage.prototype.removeItem = localStorageRemoveItem;
+    // @ts-ignore
     // eslint-disable-next-line no-undef
     delete global.TextDecoder;
   });

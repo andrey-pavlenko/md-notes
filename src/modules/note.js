@@ -3,22 +3,16 @@ import { toHtml } from './marked';
 
 class Note {
   /**
-   * @type {import('./_types').NoteInfo}
-   * @type {import('./_types').CacheNote}
-   * @param {NoteInfo} noteInfo
+   * @param {import('./_types.d').NoteInfo} noteInfo
    */
   constructor(noteInfo) {
     this.url = noteInfo.url;
     this.path = noteInfo.path;
-    ['content', 'error', 'etag', 'isRootTocItem'].forEach(key => {
-      if (noteInfo[key] != null) {
-        this[key] = noteInfo[key];
-      }
-    });
+    this.content = noteInfo.content;
+    this.error = noteInfo.error;
+    this.isRootTocItem = noteInfo.isRootTocItem;
     this._meta =
-      this.error == null
-        ? getNoteMeta(this.content, { title: this.path })
-        : {};
+      this.error == null ? getNoteMeta(this.content, { title: this.path }) : {};
   }
 
   /**
@@ -63,25 +57,17 @@ class Note {
   }
 
   /**
-   * @returns {CacheNote}
+   * @returns {import('./_types.d').CacheNote}
    */
   serialize() {
-    const serial = (({
+    const serial = (({ url, path, content, error, isRootTocItem }) => ({
       url,
       path,
       content,
       error,
-      etag,
-      isRootTocItem
-    }) => ({
-      url,
-      path,
-      content,
-      error,
-      etag,
-      isRootTocItem
+      isRootTocItem,
     }))(this);
-    Object.keys(serial).forEach(key => {
+    Object.keys(serial).forEach((key) => {
       if (serial[key] == undefined) {
         delete serial[key];
       }
@@ -90,24 +76,16 @@ class Note {
   }
 
   /**
-   * @param {CacheNote} src
+   * @param {import('./_types.d').CacheNote} src
    * @returns {Note}
    */
   static deserialize(src) {
-    const deserial = (({
+    const deserial = (({ url, path, content, error, isRootTocItem }) => ({
       url,
       path,
       content,
       error,
-      etag,
-      isRootTocItem
-    }) => ({
-      url,
-      path,
-      content,
-      error,
-      etag,
-      isRootTocItem
+      isRootTocItem,
     }))(src);
     return new Note(deserial);
   }

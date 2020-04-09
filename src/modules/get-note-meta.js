@@ -1,8 +1,7 @@
 /**
- * @type {import('./_types').NoteMeta}
  * @param {string} text
- * @param {NoteMeta} defaultMeta
- * @returns {NoteMeta}
+ * @param {import('./_types.d').NoteMeta} [defaultMeta]
+ * @returns {import('./_types.d').NoteMeta}
  */
 function getNoteMeta(text, defaultMeta) {
   function getMetaData(text) {
@@ -34,7 +33,7 @@ function getNoteMeta(text, defaultMeta) {
     return path.replace(/^\.+\/+/, '');
   }
 
-  /** @type {NoteMeta} */
+  /** @type {import('./_types.d').NoteMeta} */
   const meta = Object.assign({}, defaultMeta);
   if (typeof text === 'string') {
     let { title, tags, children, related } = getMetaData(text);

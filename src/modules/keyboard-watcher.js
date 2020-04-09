@@ -74,7 +74,7 @@ const keys = {
   219: ']',
   220: '\\',
   221: '[',
-  222: "'"
+  222: '\''
 };
 
 function buildModifiers(event) {

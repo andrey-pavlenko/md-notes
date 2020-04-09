@@ -22,6 +22,7 @@
     ],
     "processor": "svelte3/svelte3"
   }],
+  "ignorePatterns": ["_types.d.ts"],
   "rules": {
     "quotes": ["error", "single"],
     "semi": ["error", "always"]

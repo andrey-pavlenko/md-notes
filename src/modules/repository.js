@@ -4,7 +4,7 @@ import Note from './note';
 
 class Repository {
   /**
-   * @param {Note[]} notes
+   * @param {Note[]} [notes]
    */
   constructor(notes) {
     this._notes = Array.isArray(notes) ? notes : [];
@@ -26,28 +26,17 @@ class Repository {
   merge(otherRepo) {
     otherRepo._notes.forEach(otherNote => {
       // console.info('otherNote', otherNote);
-      if (otherNote.etag != null) {
-        const note = this.findNote('url', otherNote.url);
-        if (note == null) {
-          // console.info('missing', otherNote);
-          this._notes = [...this._notes, otherNote];
-        } else {
-          if (note.etag !== otherNote.etag) {
-            const noteIndex = this._notes.indexOf(note);
-            this._notes = [
-              ...this._notes.slice(0, noteIndex),
-              otherNote,
-              ...this._notes.slice(noteIndex + 1)
-            ];
-          }
-        }
+      const note = this.findNote('url', otherNote.url);
+      if (note == null) {
+        // console.info('missing', otherNote);
+        this._notes = [...this._notes, otherNote];
       }
     });
     return this;
   }
 
   /**
-   * @returns {Repository}
+   * @returns {Promise<Repository>}
    */
   static async load() {
     /**
@@ -83,9 +72,11 @@ class Repository {
     );
     let missing = getMissingPaths(notes);
     while (missing.length) {
+      // @ts-ignore
       missing = (await loadFiles(missing)).map(
         file => new Note(file)
       );
+      // @ts-ignore
       notes = [...notes, ...missing];
       missing = getMissingPaths(notes);
     }
@@ -107,8 +98,7 @@ class Repository {
   }
 
   /**
-   * @type {import('./_types').TagItem}
-   * @returns {TagItem[]}
+   * @returns {import('./_types.d').TagItem[]}
    */
   get tags() {
     const tags = []
@@ -131,8 +121,7 @@ class Repository {
   }
 
   /**
-   * @type {import('./_types').TocItem}
-   * @returns {TocItem[]}
+   * @returns {import('./_types.d').TocItem[]}
    */
   get toc() {
     let alreadyInToc = [];
@@ -140,7 +129,7 @@ class Repository {
     const getTocItem = note => {
       if (note.error == null && !alreadyInToc.includes(note.path)) {
         alreadyInToc.push(note.path);
-        /** @type {TocItem} */
+        /** @type {import('./_types.d').TocItem} */
         const tocItem = {
           path: note.path,
           title: note.title
