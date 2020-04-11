@@ -1,3 +1,4 @@
+// @ts-ignore
 import { writable } from 'svelte/store';
 import Repository from '../modules/repository';
 import options from '../options';

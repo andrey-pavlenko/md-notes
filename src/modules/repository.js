@@ -155,6 +155,14 @@ class Repository {
       .map(getTocItem)
       .filter(tocItem => tocItem != null);
   }
+
+  /**
+   * @param {string} tag 
+   * @returns {Note[]}
+   */
+  findNotesByTag(tag) {
+    return this._notes.filter(note => note.tags && note.tags.includes(tag));
+  }
 }
 
 export default Repository;

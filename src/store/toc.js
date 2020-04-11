@@ -1,3 +1,4 @@
+// @ts-ignore
 import { derived } from 'svelte/store';
 import {
   loading as repositoryLoading,

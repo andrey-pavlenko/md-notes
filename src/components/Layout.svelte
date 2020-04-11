@@ -6,8 +6,6 @@
 
   const activeClass = 'is-active';
 
-  let fetchInPtocess = false;
-
   /**
    * @type {HTMLElement}
    */
