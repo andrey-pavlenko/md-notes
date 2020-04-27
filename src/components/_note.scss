@@ -17,3 +17,9 @@
     }
   }
 }
+
+.note-tags {
+  &:not(:first-child) {
+    margin-top: .5em;
+  }
+}

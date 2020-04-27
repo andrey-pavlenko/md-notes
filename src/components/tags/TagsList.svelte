@@ -1,6 +1,7 @@
 <script>
   import TagItem from './TagItem.svelte';
   import { assets as tagAssets } from '../../store/tags';
+  
   export let pattern = undefined;
   export let tags = undefined;
 

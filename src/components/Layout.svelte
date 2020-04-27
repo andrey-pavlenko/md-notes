@@ -90,7 +90,6 @@
     <div class="navbar-menu" bind:this="{menuElement}">
       <div class="navbar-start">
         <a class="navbar-item" href="#/" use:active="{{className: activeClass}}">Содержание</a>
-        <a class="navbar-item" href="#/tags" use:active="{{className: activeClass}}">Тэги</a>
         <a class="navbar-item" href="#/search" use:active="{{className: activeClass}}">Поиск</a>
       </div>
       <div class="navbar-end">

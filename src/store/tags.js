@@ -17,4 +17,9 @@ const assets = derived(
   null
 );
 
-export { assets };
+const empty = derived(assets, (tagsAssets, set) => {
+  const isEmpty = tagsAssets == null || Object.keys(tagsAssets).length === 0;
+  set(isEmpty);
+}, true);
+
+export { assets, empty };

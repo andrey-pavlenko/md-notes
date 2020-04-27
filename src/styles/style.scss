@@ -20,7 +20,12 @@ ul {
 @import '../../node_modules/bulma/sass/utilities/derived-variables.sass';
 @import '../../node_modules/bulma/sass/utilities/mixins.sass';
 @import '../components/layout';
-@import '../components/toc/style';
 @import '../components/note';
 @import '../components/image-zoomer';
 @import '../components/tags/styles';
+
+.content {
+  ul {
+    margin: 0 0 0 1em;
+  }
+}
