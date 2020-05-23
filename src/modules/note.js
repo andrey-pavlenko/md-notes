@@ -1,5 +1,5 @@
 import getNoteMeta from './get-note-meta';
-import { toHtml } from './marked';
+import { toHtml, toText } from './marked';
 
 class Note {
   /**
@@ -52,6 +52,19 @@ class Note {
         this._html = toHtml(this.content);
       }
       return this._html;
+    }
+    return '';
+  }
+
+  /**
+   * @returns {string}
+   */
+  get text() {
+    if (this.content) {
+      if (this._text == null) {
+        this._text = toText(this.content);
+      }
+      return this._text;
     }
     return '';
   }

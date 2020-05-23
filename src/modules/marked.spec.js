@@ -12,7 +12,7 @@ describe('Marked', () => {
 
   it('code', () => {
     expect(toHtml('```\nFirst line\nSecond line\n```\n')).toEqual(
-      '<pre><code>First line\nSecond line</code></pre>'
+      '<pre><code>First line\nSecond line</code></pre>\n'
     );
     expect(toText('```\nFirst line\nSecond line\n```\n')).toEqual(
       'First line\nSecond line\n'
