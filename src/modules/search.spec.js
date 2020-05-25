@@ -159,20 +159,22 @@ describe('stem', () => {
 });
 
 describe('search', () => { 
+  function extractWords(text, positions) {
+    return positions.map(position => text.slice.apply(text, position));
+  }
+
   it('cyrillic', () => { 
     const text =
       'Говорили про ужин.\nДавайте поужинаем?\nЧем, говорю, ужинать будет?\nА поговорить за ужином?\nЗа ужином были разговоры про разное. Слышался одесский говор.';
-    let found = search(text, ['говор', 'про', 'ужин']);
-    Object.keys(found)
-      .forEach(stem => found[stem]
-        .forEach(positions => expect(String.prototype.slice.apply(text, positions).toLowerCase().startsWith(stem))
-          .toBeTruthy()
-      ));
+    let found = search(text, ['говор', 'про', 'ужин', 'чем']);
+    expect(extractWords(text, found['говор'])).toEqual([ 'Говорили', 'говорю', 'говор' ]);
+    expect(extractWords(text, found['про'])).toEqual([ 'про', 'про' ]);
+    expect(extractWords(text, found['ужин'])).toEqual([ 'ужин', 'ужинать', 'ужином', 'ужином' ]);
+    expect(extractWords(text, found['чем'])).toEqual([ 'Чем' ]);
     found = search(text, ['поход', 'доход']);
     expect(found).toEqual({ 'поход': [], 'доход': [] });
     found = search(text, ['был', 'чем', 'поход']);
     expect(found).toEqual({ 'был': [[100, 104]], 'чем': [[38, 41]], 'поход': [] });
-    // console.info(found);
   });
 
   it('latin', () => { 
@@ -183,7 +185,20 @@ describe('search', () => {
       'string': [[66, 72], [169, 176]],
       'development': []
     });
-    // console.info(found);
+  });
+  
+  it('number', () => {
+    const text = 'Встреча состоится в 11:30, но не в 11:25 часов. Package version 5.1.22. Размер 22,5 мм. Size is 22.5 mm. Шансы 50/50.';
+    let found = search(text, ['11']);
+    expect(extractWords(text, found[11])).toEqual(['11:30', '11:25']);
+    found = search(text, ['11:25']);
+    expect(extractWords(text, found['11:25'])).toEqual(['11:25']);
+    found = search(text, ['5']);
+    expect(extractWords(text, found['5'])).toEqual(['5.1.22', '50/50']);
+    found = search(text, ['5.1']);
+    expect(extractWords(text, found['5.1'])).toEqual(['5.1.22']);
+    found = search(text, ['22']);
+    expect(extractWords(text, found['22'])).toEqual(['22,5', '22.5']);
   });
 });
 

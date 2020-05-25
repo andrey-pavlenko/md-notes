@@ -1,3 +1,4 @@
+// @ts-nocheck
 import svelte from 'rollup-plugin-svelte';
 import noderesolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -5,8 +6,10 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
 import replace from '@rollup/plugin-replace';
+import builtins from 'rollup-plugin-node-builtins';
 import Pako from 'pako';
 import { readFileSync } from 'fs';
+// @ts-check
 
 function compressHelp() {
   const helpMarkdownPath = './src/components/help/help.md';
@@ -63,6 +66,7 @@ export default {
       dev: !production,
       emitCss: true
     }),
+    builtins(),
     noderesolve({
       browser: true,
       dedupe: importee =>

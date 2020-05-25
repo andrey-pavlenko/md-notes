@@ -1,10 +1,18 @@
-import { PorterStemmer, PorterStemmerRu } from 'natural';
+// @ts-nocheck
+import PorterStemmer from 'natural/lib/natural/stemmers/porter_stemmer';
+import PorterStemmerRu from 'natural/lib/natural/stemmers/porter_stemmer_ru';
+// @ts-check
 
 const latinChars = 'a-z';
 const europianChars = 'ā-žà-öø-ÿ';
 const cyrillicChars = 'а-яёѐѓєіїј';
 const wordChars = `${latinChars}${europianChars}${cyrillicChars}`;
 const word = `(?:[0-9]+[.,/:])+[0-9]+|[${wordChars}0-9]+`;
+
+const stopwords = new Set (Object.values({
+  en: ['a', 'about', 'all', 'am', 'an', 'and', 'any', 'are', 'as', 'at', 'be', 'been', 'but', 'by', 'can', 'did', 'do', 'does', 'doing', 'don', 'for', 'from', 'had', 'has', 'have', 'having', 'he', 'her', 'here', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'i', 'in', 'into', 'is', 'it', 'its', 'itself', 'me', 'my', 'myself', 'no', 'nor', 'not', 'now', 'of', 'on', 'or', 'other', 'our', 'ours', 'ourselves', 'out', 'own', 's', 'same', 'she', 'should', 'so', 'some', 'such', 't', 'than', 'that', 'the', 'their', 'theirs', 'them', 'themselves', 'then', 'there', 'these', 'they', 'this', 'those', 'through', 'to', 'too', 'very', 'was', 'we', 'were', 'what', 'when', 'where', 'which', 'who', 'whom', 'why', 'will', 'with', 'you', 'your', 'yours', 'yourself', 'yourselves'],
+  ru: ['а', 'бы', 'в', 'вот', 'все', 'всей', 'вы', 'да', 'для', 'до', 'еще', 'ещё', 'же', 'и', 'из', 'к', 'как', 'мы', 'на', 'наш', 'не', 'него', 'нее', 'нет', 'них', 'но', 'о', 'она', 'они', 'оно', 'от', 'ото', 'по', 'с', 'та', 'такой', 'тот', 'ты', 'у', 'что', 'это', 'этот', 'я']
+}).flat());
 
 /**
  * @param {string} text
@@ -93,18 +101,20 @@ function fragmentation(text, positions, indent = 0) {
  */
 function search(text, stems) {
   return stems.reduce((found, stem) => {
-    const re = new RegExp(
-      `(?<=[^${wordChars}0-9]|^)(${stem}[${wordChars}]*)(?=[^${wordChars}0-9]|$)`,
-      'uig'
-    );
+    const pattern = stem.match(/^\d+(?:[.,/:]\d+)*/)
+      ? `(?:^|[^[0-9.,/:])(${stem}(?:[0-9.,/:]+[0-9]+)*)`
+      : `(?:^|[^${wordChars}0-9])(${stem}[${wordChars}]*)`;
+    const re = new RegExp(pattern, 'igm');
     found[stem] = found[stem] || [];
     let match = re.exec(text);
     while (match) {
-      found[stem].push([match.index, re.lastIndex]);
+      // console.info(`"${match[0]}"`, `"${match[1]}"`, match.index);
+      // console.info(match, re.lastIndex, re['$&']);
+      found[stem].push([match.index + match[0].length - match[1].length, re.lastIndex]);
       match = re.exec(text);
     }
     return found;
   }, {});
 }
 
-export { tokenize, stem, search, fragmentation };
+export { tokenize, stem, search, fragmentation, stopwords };
