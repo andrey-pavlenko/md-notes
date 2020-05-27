@@ -50,6 +50,9 @@ function makeTextRenderer() {
   renderer.hr = function() {
     return '';
   };
+  renderer.br = function () {
+    return '\n';
+  };
   renderer.list = makeTextFunction();
   renderer.listitem = makeTextFunction('\n');
   renderer.paragraph = makeTextFunction('\n');

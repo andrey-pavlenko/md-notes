@@ -11,6 +11,13 @@ class Repository {
   }
 
   /**
+   * @returns {Note[]}
+   */
+  get notes() {
+    return this._notes;
+  }
+
+  /**
    * @param {string} key
    * @param {any} value
    * @returns {Note | undefined}
@@ -25,10 +32,8 @@ class Repository {
    */
   merge(otherRepo) {
     otherRepo._notes.forEach(otherNote => {
-      // console.info('otherNote', otherNote);
       const note = this.findNote('url', otherNote.url);
       if (note == null) {
-        // console.info('missing', otherNote);
         this._notes = [...this._notes, otherNote];
       }
     });

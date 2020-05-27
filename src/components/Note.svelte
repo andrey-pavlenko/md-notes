@@ -15,8 +15,6 @@
   $: (function(assets, location) {
       note = assets.findNote('path', decodeURI(location).replace(/^[/.]*/, ''));
       noteTags = note && note.tags;
-      // console.info(noteTags);
-      // console.info('assets.tags', assets.tags);
       if (note && note.related != null) {
         relatedNotes = note.related
           .map(relatePath => assets.findNote('path', relatePath))
@@ -33,11 +31,9 @@
     if (img.naturalWidth > img.width || img.naturalHeight > img.height) {
       img.classList.add('img-zoomable');
       img.onclick = zoomImage;
-      // console.info('Добавить к', img);
     } else {
       img.classList.remove('img-zoomable');
       img.onclick = null;
-      // console.info('Удалить из', img);
     }
 
   }

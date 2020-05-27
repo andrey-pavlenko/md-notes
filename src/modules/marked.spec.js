@@ -28,6 +28,11 @@ describe('Marked', () => {
     );
   });
 
+  it('br', () => {
+    expect(toHtml('First line  \nSecond line\n')).toEqual('<p>First line<br>Second line</p>\n');
+    expect(toText('First line  \nSecond line\n')).toEqual('First line\nSecond line\n');
+  });
+
   it('html', () => {
     expect(toText('<pre>Some code</pre>')).toEqual('');
     expect(

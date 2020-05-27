@@ -1,7 +1,5 @@
 <script>
   export let item = undefined;
-
-  // console.info(item);
 </script>
 
 <a href="#/{item.path}">{item.title}</a>

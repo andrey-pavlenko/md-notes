@@ -108,8 +108,6 @@ function search(text, stems) {
     found[stem] = found[stem] || [];
     let match = re.exec(text);
     while (match) {
-      // console.info(`"${match[0]}"`, `"${match[1]}"`, match.index);
-      // console.info(match, re.lastIndex, re['$&']);
       found[stem].push([match.index + match[0].length - match[1].length, re.lastIndex]);
       match = re.exec(text);
     }
